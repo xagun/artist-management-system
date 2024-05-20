@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('artist_id')->constrained()->cascadeOnDelete();
             $table->string('title');
-            $table->string('album_name');
+            $table->string('album_name')->nullable();
             $table->enum('genre', ['rnb', 'country', 'classic', 'rock', 'jazz']);
             $table->timestamps();
         });
