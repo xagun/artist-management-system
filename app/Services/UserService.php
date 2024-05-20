@@ -22,4 +22,10 @@ class UserService
         ]);
 
     }
+    public function getUserByEmail(string $email): array
+    {
+        $user = DB::select('SELECT * FROM users WHERE email = ? LIMIT 1', [$email]);
+
+        return (array) $user[0] ?? [];
+    }
 }
