@@ -10,6 +10,9 @@ Route::controller(UserController::class)->group(function (){
     Route::post('/register', 'register');
     Route::post('/login', 'login');
     Route::post('/logout', 'logout')->middleware('auth:sanctum');
+    Route::get('/users','getAllUser')->middleware('auth:sanctum');
+    Route::post('/user/delete', 'deleteUser')->middleware('auth:sanctum');
+    Route::post('/user/update/{id}', 'updateUser')->middleware('auth:sanctum');
 });
 
 
