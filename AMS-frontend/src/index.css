@@ -1,10 +1,13 @@
+@import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap');
+
 @tailwind base;
   @tailwind components;
   @tailwind utilities;
 
+
   @layer base {
     :root {
-      --background: 0 0% 100%;
+      --background: #fff;
       --foreground: 222.2 84% 4.9%;
 
       --card: 0 0% 100%;
@@ -36,7 +39,7 @@
     }
 
     .dark {
-      --background: 222.2 84% 4.9%;
+      --background: #000000;
       --foreground: 210 40% 98%;
 
       --card: 222.2 84% 4.9%;
