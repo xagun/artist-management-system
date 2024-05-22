@@ -40,7 +40,7 @@ export default function DefaultLayout() {
                         )}
                     </p>
                 </div>
-                <div className="p-5 bg-white md:flex-1">
+                <div className="p-5 bg-white md:flex-1 items-center flex justify-center">
                     <Outlet />
                 </div>
             </div>

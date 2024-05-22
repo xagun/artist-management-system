@@ -8,7 +8,7 @@ export default function Login() {
     const handleLogin = () => {};
 
     return (
-        <div>
+        <div className="w-full">
             <h3 className="my-4 text-2xl font-semibold text-gray-700">
                 Account Login
             </h3>
