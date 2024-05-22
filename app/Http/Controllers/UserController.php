@@ -43,8 +43,7 @@ class UserController extends Controller
             DB::beginTransaction();
             $this->userService->registerUser($validatedData);
             DB::commit();
-        }
-        catch (\Exception $exception) {
+        } catch (\Exception $exception) {
             logger($exception);
 
             return response()->json([
@@ -53,11 +52,9 @@ class UserController extends Controller
             ], 500);
         }
         return response()->json([
-            'success' => 'true',
+            'success' => true,
             'message' => 'User registration successful.'
         ], 200);
-
-
     }
 
 
@@ -68,7 +65,8 @@ class UserController extends Controller
      *
      * @return JsonResponse
      */
-    public function login(LoginRequest $request):JsonResponse {
+    public function login(LoginRequest $request): JsonResponse
+    {
         $validatedData = $request->validated();
 
         try {
@@ -122,7 +120,6 @@ class UserController extends Controller
         try {
             $user = Auth::user();
             $user->currentAccessToken()->delete();
-
         } catch (\Exception $exception) {
             logger($exception);
             return response()->json([
@@ -144,7 +141,7 @@ class UserController extends Controller
      *
      * @return JsonResponse
      */
-    public function getAllUser():JsonResponse
+    public function getAllUser(): JsonResponse
     {
         $allUsers = $this->userService->getAllUser();
 
@@ -162,7 +159,7 @@ class UserController extends Controller
      *
      * @return JsonResponse
      */
-    public function deleteUser(Request $request):JsonResponse
+    public function deleteUser(Request $request): JsonResponse
     {
         try {
             $user = $this->userService->getUserByEmail($request['email']);
@@ -226,7 +223,5 @@ class UserController extends Controller
             'success' => true,
             'message' => 'User records updated successfully'
         ], 200);
-
     }
-
 }
