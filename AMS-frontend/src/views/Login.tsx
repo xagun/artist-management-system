@@ -1,11 +1,35 @@
 import { Button } from "@/components/ui/button";
+import { useStateContext } from "@/context/ContextProvider";
+import axiosInstance from "@/utils/AxiosInstance";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function Login() {
     const [email, setEmail] = useState<string>("");
-    const [passowrd, setPassowrd] = useState<string>("");
+    const [password, setPassword] = useState<string>("");
+    const [error, setError] = useState<boolean>(false);
 
-    const handleLogin = () => {};
+    const navigate = useNavigate();
+
+    const { setToken, setUser } = useStateContext();
+
+    const handleLogin = async () => {
+        const params = {
+            email: email,
+            password: password,
+        };
+        try {
+            const res = await axiosInstance.post("/login", params);
+            if (res.status === 200 && res.data.success === true) {
+                setToken(res.data.data.access_token);
+                setUser(res.data.data.user_details);
+                navigate("/dashboard");
+            }
+        } catch (err) {
+            setError(true);
+            console.log(err);
+        }
+    };
 
     return (
         <div className="w-full">
@@ -41,8 +65,8 @@ export default function Login() {
                     <input
                         type="password"
                         id="password"
-                        value={passowrd}
-                        onChange={(e) => setPassowrd(e.target.value)}
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
                         className="px-4 py-2 transition duration-300 border border-gray-300 rounded focus:border-transparent focus:outline-none focus:ring-4 focus:ring-blue-200"
                     />
                 </div>
