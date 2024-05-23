@@ -4,7 +4,12 @@ import axiosInstance from "@/utils/AxiosInstance";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-const Register = () => {
+type IProps = {
+    addUser: boolean;
+    handleCloseUserDialog: () => void;
+};
+
+const Register = ({ addUser, handleCloseUserDialog }: IProps) => {
     const [email, setEmail] = useState<string>("");
     const [password, setPassword] = useState<string>("");
     const [firstName, setFirstName] = useState<string>("");
@@ -32,7 +37,7 @@ const Register = () => {
         try {
             const res = await axiosInstance.post("/register", params);
             if (res.status === 200 && res.data.success === true) {
-                navigate("/login");
+                addUser ? handleCloseUserDialog() : navigate("/login");
             }
         } catch (err) {
             setError(true);
@@ -48,7 +53,7 @@ const Register = () => {
     return (
         <div className="w-full">
             <h3 className="my-4 text-2xl font-semibold text-gray-700">
-                Account Registration
+                {!addUser && "Account Registration"}
             </h3>
             <div className="flex flex-col space-y-3">
                 <div className="flex gap-4 max-sm:flex-col">
@@ -246,12 +251,14 @@ const Register = () => {
                     />
                 </div>
 
-                <Button
-                    className="w-[140px] px-4 py-2 text-sm font-semibold text-white transition-colors duration-300 bg-blue-500 rounded-md shadow hover:bg-blue-600 focus:outline-none focus:ring-blue-200 focus:ring-4"
-                    onClick={handleRegister}
-                >
-                    Register
-                </Button>
+                <div className="text-end">
+                    <Button
+                        className="w-[140px] px-4 py-2 text-sm font-semibold text-white transition-colors duration-300 bg-blue-500 rounded-md shadow hover:bg-blue-600 focus:outline-none focus:ring-blue-200 focus:ring-4"
+                        onClick={handleRegister}
+                    >
+                        {addUser ? "Add User" : "Register"}
+                    </Button>
+                </div>
             </div>
         </div>
     );
