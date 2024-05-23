@@ -77,10 +77,13 @@ class UserService
      */
     public function getAllUser(): array
     {
-        $allUsers = DB::select("SELECT id, first_name, last_name, email, phone, dob, gender, address
-        FROM users;");
+        $allUsers = DB::select("SELECT
+            CONCAT(first_name, ' ', last_name) as full_name,
+            id, first_name, last_name, email, phone, dob, gender, address
+            FROM users;");
         return $allUsers;
     }
+
 
     /**
      * Update user data
