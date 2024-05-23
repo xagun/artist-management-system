@@ -1,5 +1,6 @@
 import axios from 'axios';
 
+
 const axiosInstance = axios.create({
   baseURL: 'http://localhost:80/api',
   headers: {
@@ -12,7 +13,10 @@ const axiosInstance = axios.create({
 axiosInstance.interceptors.request.use(
   (config) => {
     // Modify request config before sending
-    config.headers.Authorization = 'Bearer <your_access_token>';
+const ACCESS_TOKEN = localStorage.getItem("ACCESS_TOKEN")
+if(ACCESS_TOKEN){
+    config.headers.Authorization = `Bearer ${ACCESS_TOKEN}`;
+}
     return config;
   },
   (error) => {

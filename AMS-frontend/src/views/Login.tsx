@@ -3,6 +3,7 @@ import { useStateContext } from "@/context/ContextProvider";
 import axiosInstance from "@/utils/AxiosInstance";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import FullWindowSpinner from "./components/FullWindowSpinner";
 
 export default function Login() {
     const [email, setEmail] = useState<string>("");
@@ -11,9 +12,10 @@ export default function Login() {
 
     const navigate = useNavigate();
 
-    const { setToken, setUser } = useStateContext();
+    const { setToken, setUser, setFullSpinner } = useStateContext();
 
     const handleLogin = async () => {
+        setFullSpinner(true);
         const params = {
             email: email,
             password: password,
@@ -24,8 +26,10 @@ export default function Login() {
                 setToken(res.data.data.access_token);
                 setUser(res.data.data.user_details);
                 navigate("/dashboard");
+                setFullSpinner(false);
             }
         } catch (err) {
+            setFullSpinner(false);
             setError(true);
             console.log(err);
         }
