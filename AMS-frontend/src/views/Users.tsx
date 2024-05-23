@@ -28,7 +28,6 @@ import {
     AlertDialogFooter,
     AlertDialogHeader,
     AlertDialogTitle,
-    AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 
 import Register from "./Register";
@@ -45,8 +44,7 @@ export default function Users() {
         getAllUsers();
     };
 
-    const handleDeleteDialog = (email: string) => {
-        setSelectedEmailToDelete(email);
+    const handleDeleteDialog = () => {
         setDeleteDialog(!deleteDialog);
     };
 
@@ -100,9 +98,12 @@ export default function Users() {
                             <DropdownMenuItem>Update</DropdownMenuItem>
 
                             <DropdownMenuItem
-                                onClick={() =>
-                                    handleDeleteDialog(row.original.email)
-                                }
+                                onClick={() => {
+                                    handleDeleteDialog();
+                                    setSelectedEmailToDelete(
+                                        row.original.email
+                                    );
+                                }}
                             >
                                 Delete
                             </DropdownMenuItem>
@@ -132,6 +133,7 @@ export default function Users() {
         try {
             const res = await axiosInstance.get("/users");
             if (res.status === 200 && res.data.success === true) {
+                debugger;
                 setAllUsers(res.data.data);
             }
         } catch (err) {
