@@ -146,9 +146,11 @@ class UserController extends Controller
         $authUserId = Auth::id();
         $allUsers = $this->userService->getAllUser();
 
-        $allUsers = array_filter($allUsers, function ($user) use ($authUserId) {
+        (array) $allUsers = array_filter($allUsers, function ($user) use ($authUserId) {
             return $user->id !== $authUserId;
         });
+
+        $allUsers = array_values($allUsers);
 
         return response()->json([
             'success' => true,
