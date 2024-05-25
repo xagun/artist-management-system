@@ -21,16 +21,14 @@ class UserUpdateRequest extends FormRequest
      */
     public function rules(): array
     {
-            return [
-                'first_name' => 'required',
-                'last_name' => 'required',
-                'email' => 'required|email:filter|unique:users,email,' . $this->route('id'),
-                'password' => 'nullable|string|min:8|confirmed',
-                'phone' => 'required|digits:10',
-                'dob' => 'required|date',
-                'gender' => 'required|in:m,f,o',
-                'address' => 'nullable|string'
-            ];
-
+        return [
+            'first_name' => 'required',
+            'last_name' => 'required',
+            'email' => 'required|email:filter|unique:users,email,' . $this->route('id'),
+            'phone' => 'required|digits:10',
+            'dob' => 'required|date',
+            'gender' => 'required|in:m,f,o',
+            'address' => 'nullable|string'
+        ];
     }
 }

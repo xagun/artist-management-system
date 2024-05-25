@@ -100,7 +100,6 @@ class UserService
          SET first_name = ?,
              last_name = ?,
              email = ?,
-             password = ?,
              gender = ?,
              dob = ?,
              phone = ?,
@@ -111,7 +110,6 @@ class UserService
                 $data['first_name'],
                 $data['last_name'],
                 $data['email'],
-                Hash::make($data['password']),
                 $data['gender'],
                 $data['dob'],
                 $data['phone'],
@@ -120,5 +118,19 @@ class UserService
                 $userId
             ]
         );
+    }
+
+    /**
+     * Update Password
+     *
+     * @param string $data
+     * @param int $id
+     *
+     * @return bool
+     */
+    public function updatePassword(string $data, int $id): bool
+    {
+        $password = Hash::make($data);
+        return DB::update("UPDATE users SET password = ?, updated_at = ? where id = $id", [$password, now()]);
     }
 }
