@@ -1,4 +1,4 @@
-import { ReactNode, createContext, useContext, useState } from "react";
+import { ReactNode, createContext, useContext, useMemo, useState } from "react";
 
 interface StateContextI {
     user: any;
@@ -37,11 +37,12 @@ export const ContextProvider: React.FC<{ children: ReactNode }> = ({
         }
     };
 
-    const setFullSpinner = (fullSpinner: boolean) => {
-        _setFullSpinner(fullSpinner);
+    const setFullSpinner = (fullSpinnerState: boolean) => {
+        _setFullSpinner(fullSpinnerState);
     };
 
     const setUser = (userData: any) => {
+        localStorage.setItem("userDetails", JSON.stringify(userData));
         _setUser(userData);
     };
 

@@ -19,18 +19,9 @@ import {
     DialogTitle,
     DialogTrigger,
 } from "@/components/ui/dialog";
-import {
-    AlertDialog,
-    AlertDialogAction,
-    AlertDialogCancel,
-    AlertDialogContent,
-    AlertDialogDescription,
-    AlertDialogFooter,
-    AlertDialogHeader,
-    AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
 
 import Register from "./Register";
+import DeleteDialog from "./components/DeleteDialog";
 
 export default function Users() {
     const [allUsers, setAllUsers] = useState<IUser[]>([]);
@@ -85,7 +76,6 @@ export default function Users() {
         {
             id: "actions",
             cell: ({ row }) => {
-                console.log(row.original);
                 return (
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
@@ -133,7 +123,6 @@ export default function Users() {
         try {
             const res = await axiosInstance.get("/users");
             if (res.status === 200 && res.data.success === true) {
-                debugger;
                 setAllUsers(res.data.data);
             }
         } catch (err) {
@@ -173,25 +162,12 @@ export default function Users() {
                 filterDataLabel={"name"}
             />
 
-            <AlertDialog open={deleteDialog} onOpenChange={handleDeleteDialog}>
-                <AlertDialogContent className="bg-white">
-                    <AlertDialogHeader>
-                        <AlertDialogTitle>Are you sure?</AlertDialogTitle>
-                        <AlertDialogDescription>
-                            This action cannot be undone. This will permanently
-                            delete data.
-                        </AlertDialogDescription>
-                    </AlertDialogHeader>
-                    <AlertDialogFooter>
-                        <AlertDialogCancel>Cancel</AlertDialogCancel>
-                        <AlertDialogAction
-                            onClick={() => deleteUser(selectedEmailToDelete)}
-                        >
-                            Continue
-                        </AlertDialogAction>
-                    </AlertDialogFooter>
-                </AlertDialogContent>
-            </AlertDialog>
+            <DeleteDialog
+                open={deleteDialog}
+                handleOnChange={handleDeleteDialog}
+                onDelete={deleteUser}
+                itemToDelete={selectedEmailToDelete}
+            />
         </div>
     );
 }

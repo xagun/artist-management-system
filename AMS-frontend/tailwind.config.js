@@ -17,6 +17,10 @@ module.exports = {
             },
         },
         extend: {
+            backgroundImage: {
+                "custom-gradient":
+                    "linear-gradient(90deg, #3a3a3a 100%, #534f4b 100%)",
+            },
             fontFamily: {
                 lato: ["Lato", "sans-serif"],
             },

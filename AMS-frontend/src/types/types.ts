@@ -8,3 +8,26 @@ export interface IUser {
     address: string;
     phone: string;
   }
+
+
+  export interface IArtist {
+    address: string;
+    dob: string;
+    first_release_year: string;
+    gender: string;
+    id: number;
+    name: string;
+    no_of_albums_released: number;
+  }
+
+
+
+export interface IMusic {
+    id: number;
+    artist_id: number;
+    title: string;
+    album_name: string;
+    genre: string;
+    artist_name: string;
+    created_at:string
+}

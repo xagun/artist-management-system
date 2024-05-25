@@ -1,9 +1,14 @@
-import React from "react";
 import { Link } from "react-router-dom";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Globe, LogOut, Music, PencilIcon, Users } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 const Sidebar = ({ handleLogout }: { handleLogout: () => void }) => {
+    const userString = localStorage.getItem("userDetails");
+    const user = userString ? JSON.parse(userString) : null;
+
     return (
-        <div>
+        <div className="text-white">
             <button
                 data-drawer-target="default-sidebar"
                 data-drawer-toggle="default-sidebar"
@@ -19,8 +24,8 @@ const Sidebar = ({ handleLogout }: { handleLogout: () => void }) => {
                     xmlns="http://www.w3.org/2000/svg"
                 >
                     <path
-                        clip-rule="evenodd"
-                        fill-rule="evenodd"
+                        clipRule="evenodd"
+                        fillRule="evenodd"
                         d="M2 4.75A.75.75 0 012.75 4h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 4.75zm0 10.5a.75.75 0 01.75-.75h7.5a.75.75 0 010 1.5h-7.5a.75.75 0 01-.75-.75zM2 10a.75.75 0 01.75-.75h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 10z"
                     ></path>
                 </svg>
@@ -28,92 +33,76 @@ const Sidebar = ({ handleLogout }: { handleLogout: () => void }) => {
 
             <aside
                 id="default-sidebar"
-                className="fixed top-0 left-0 z-40 w-64 h-screen transition-transform -translate-x-full sm:translate-x-0"
+                className="fixed top-0 left-0 z-30 w-64 h-screen  transition-transform -translate-x-full sm:translate-x-0"
                 aria-label="Sidebar"
             >
-                <div className="h-full px-3 py-4 overflow-y-auto bg-gray-50 dark:bg-gray-800">
-                    <ul className="space-y-2 font-medium flex flex-col justify-around h-full">
-                        <div className="my-3 text-4xl font-bold tracking-wider text-center">
+                <div className="h-full px-3 py-4 overflow-y-autos bg-gray-800 flex justify-center items-center ">
+                    <ul className="space-y-4 font-medium flex flex-col text-white">
+                        {/* <div className="my-3 text-4xl font-bold tracking-wider text-center">
                             <span>AMS</span>
                             <div className="text-xs">
                                 Artist Management System
                             </div>
+                        </div> */}
+                        <div className="flex p-2 gap-3 justify-between items-center sm:hidden">
+                            <div className="flex gap-3 items-center">
+                                <Avatar className="h-12 w-12">
+                                    <AvatarImage src="https://github.com/shadcn.png" />
+                                    <AvatarFallback>CN</AvatarFallback>
+                                </Avatar>
+                                <div>
+                                    <p className="text-xs font-light">
+                                        Welcome back
+                                    </p>
+                                    <p className="text-lg">
+                                        {user?.first_name}
+                                    </p>
+                                </div>
+                            </div>
+                            <Button className="flex p-2 rounded-md h-8 w-8">
+                                <PencilIcon className="h-4 w-4" />
+                            </Button>
                         </div>
 
-                        <div>
-                            <li>
-                                <Link
-                                    to="/"
-                                    className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
-                                >
-                                    <svg
-                                        className="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
-                                        aria-hidden="true"
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        fill="currentColor"
-                                        viewBox="0 0 22 21"
-                                    >
-                                        <path d="M16.975 11H10V4.025a1 1 0 0 0-1.066-.998 8.5 8.5 0 1 0 9.039 9.039.999.999 0 0 0-1-1.066h.002Z" />
-                                        <path d="M12.5 0c-.157 0-.311.01-.565.027A1 1 0 0 0 11 1.02V10h8.975a1 1 0 0 0 1-.935c.013-.188.028-.374.028-.565A8.51 8.51 0 0 0 12.5 0Z" />
-                                    </svg>
-                                    <span className="ms-3">Discover</span>
-                                </Link>
-                            </li>
-                            <li>
-                                <Link
-                                    to="/users"
-                                    className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
-                                >
-                                    <svg
-                                        className="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
-                                        aria-hidden="true"
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        fill="currentColor"
-                                        viewBox="0 0 22 21"
-                                    >
-                                        <path d="M16.975 11H10V4.025a1 1 0 0 0-1.066-.998 8.5 8.5 0 1 0 9.039 9.039.999.999 0 0 0-1-1.066h.002Z" />
-                                        <path d="M12.5 0c-.157 0-.311.01-.565.027A1 1 0 0 0 11 1.02V10h8.975a1 1 0 0 0 1-.935c.013-.188.028-.374.028-.565A8.51 8.51 0 0 0 12.5 0Z" />
-                                    </svg>
-                                    <span className="ms-3">Users</span>
-                                </Link>
-                            </li>
+                        <li>
+                            <p className="p-2 text-white text-2xl font-thin mb-3">
+                                Manage
+                            </p>
+                            <Link
+                                to="/users"
+                                className="flex items-center p-2 text-thin rounded-lg dark:text-white hover:bg-gray-900 dark:hover:bg-gray-700 group"
+                            >
+                                <span className="">Users</span>
+                            </Link>
+                        </li>
 
-                            <li>
-                                <Link
-                                    to="/artists"
-                                    className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
-                                >
-                                    <svg
-                                        className="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
-                                        aria-hidden="true"
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        fill="currentColor"
-                                        viewBox="0 0 22 21"
-                                    >
-                                        <path d="M16.975 11H10V4.025a1 1 0 0 0-1.066-.998 8.5 8.5 0 1 0 9.039 9.039.999.999 0 0 0-1-1.066h.002Z" />
-                                        <path d="M12.5 0c-.157 0-.311.01-.565.027A1 1 0 0 0 11 1.02V10h8.975a1 1 0 0 0 1-.935c.013-.188.028-.374.028-.565A8.51 8.51 0 0 0 12.5 0Z" />
-                                    </svg>
-                                    <span className="ms-3">Artists</span>
-                                </Link>
-                            </li>
-                        </div>
+                        <li>
+                            <Link
+                                to="/artists"
+                                className="flex items-center p-2 text-thin rounded-lg dark:text-white hover:bg-gray-900 dark:hover:bg-gray-700 group"
+                            >
+                                <span className="">Artists</span>
+                            </Link>
+                        </li>
+
+                        <li>
+                            <p className="p-2 text-white text-2xl font-thin mb-3">
+                                My Music
+                            </p>
+                            <Link
+                                to="/"
+                                className="flex items-center p-2 text-thin rounded-lg dark:text-white hover:bg-gray-900 dark:hover:bg-gray-700 group"
+                            >
+                                <span className="">Discover</span>
+                            </Link>
+                        </li>
 
                         <li onClick={handleLogout}>
                             <Link
                                 to="#"
-                                className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
+                                className="flex items-center p-2 text-thin rounded-lg dark:text-white hover:bg-gray-900 dark:hover:bg-gray-700 group"
                             >
-                                <svg
-                                    className="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
-                                    aria-hidden="true"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    fill="currentColor"
-                                    viewBox="0 0 22 21"
-                                >
-                                    <path d="M16.975 11H10V4.025a1 1 0 0 0-1.066-.998 8.5 8.5 0 1 0 9.039 9.039.999.999 0 0 0-1-1.066h.002Z" />
-                                    <path d="M12.5 0c-.157 0-.311.01-.565.027A1 1 0 0 0 11 1.02V10h8.975a1 1 0 0 0 1-.935c.013-.188.028-.374.028-.565A8.51 8.51 0 0 0 12.5 0Z" />
-                                </svg>
-                                <span className="ms-3">Logout</span>
+                                <span className="">Logout</span>
                             </Link>
                         </li>
                     </ul>
