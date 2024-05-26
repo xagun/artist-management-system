@@ -44,7 +44,8 @@ axiosInstance.interceptors.response.use(
           redirect("/");
         }
         else if(customError.response.status !== 422){
-            toast("Something went wrong")
+            // @ts-ignore
+            toast.error(customError.response.data.message);
         }
         else {
           // Log or handle other specific errors
