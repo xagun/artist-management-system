@@ -82,7 +82,7 @@ export default function Dashboard() {
 
                     <div className="w-full">
                         <h1 className="text-2xl my-6">Popular artists</h1>
-                        <div className="flex w-full overflow-x-auto overflow-y-hidden justify-between gap-3">
+                        <div className="flex w-full overflow-x-auto overflow-y-hidden gap-4">
                             {allArtists.length > 0
                                 ? randomPicks(allArtists, 6).map(
                                       (artist, key) => (
@@ -91,7 +91,7 @@ export default function Dashboard() {
                                               className="flex flex-col items-center gap-3 flex-none"
                                           >
                                               <img
-                                                  className="w-20 h-20 sm:w-24 sm:h-24 rounded-full object-cover"
+                                                  className="w-20 h-20 sm:w-28 sm:h-28 rounded-full object-cover"
                                                   src={
                                                       artist.image ||
                                                       "fallback.png"
