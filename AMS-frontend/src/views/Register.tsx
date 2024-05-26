@@ -163,7 +163,7 @@ const Register = ({
                             )}
                         />
                         <span className="text-red-500 text-[10px]">
-                            {errorObj.first_name}
+                            {errorObj?.first_name}
                         </span>
                     </div>
                     <div className="flex flex-col space-y-1 w-full">
@@ -185,7 +185,7 @@ const Register = ({
                             )}
                         />
                         <span className="text-red-500 text-[10px]">
-                            {errorObj.last_name}
+                            {errorObj?.last_name}
                         </span>
                     </div>
                 </div>
@@ -212,7 +212,7 @@ const Register = ({
                             )}
                         />
                         <span className="text-red-500 text-[10px]">
-                            {errorObj.dob}
+                            {errorObj?.dob}
                         </span>
                     </div>
                     <div className="flex flex-col space-y-1 w-full">
@@ -241,7 +241,7 @@ const Register = ({
                             <option value="o">Others</option>
                         </select>
                         <span className="text-red-500 text-[10px]">
-                            {errorObj.gender}
+                            {errorObj?.gender}
                         </span>
                     </div>
                 </div>
@@ -287,7 +287,7 @@ const Register = ({
                             )}
                         />
                         <span className="text-red-500 text-[10px]">
-                            {errorObj.phone}
+                            {errorObj?.phone}
                         </span>
                     </div>
                 </div>
@@ -312,7 +312,7 @@ const Register = ({
                         disabled={updateAction}
                     />
                     <span className="text-red-500 text-[10px]">
-                        {errorObj.email}
+                        {errorObj?.email}
                     </span>
                 </div>
                 {!updateAction && (
@@ -336,12 +336,12 @@ const Register = ({
                                 "inputClass",
                                 (error && password === "") ||
                                     (error &&
-                                        errorObj.password &&
+                                        errorObj?.password &&
                                         "inputErrorClass")
                             )}
                         />
                         <span className="text-red-500 text-[10px]">
-                            {errorObj.password}
+                            {errorObj?.password}
                         </span>
                     </div>
                 )}
@@ -366,12 +366,12 @@ const Register = ({
                                 "inputClass",
                                 (error && cPassword === "") ||
                                     (error &&
-                                        errorObj.password_confirmation &&
+                                        errorObj?.password_confirmation &&
                                         "inputErrorClass")
                             )}
                         />
                         <span className="text-red-500 text-[10px]">
-                            {errorObj.password_confirmation}
+                            {errorObj?.password_confirmation}
                         </span>
                     </div>
                 )}

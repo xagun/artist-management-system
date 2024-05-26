@@ -27,7 +27,9 @@ class ArtistRequest extends FormRequest
             'gender' => 'required|in:m,f,o',
             'address' => 'nullable',
             'first_release_year' => 'required|date_format:Y|digits:4|after:1901',
-            'no_of_albums_released' => 'nullable|integer'
+            'no_of_albums_released' => 'nullable|integer',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+
         ];
     }
 
@@ -44,7 +46,8 @@ class ArtistRequest extends FormRequest
             'gender' => 'Gender',
             'address' => 'Address',
             'first_release_year' => 'First Release Year',
-            'no_of_albums_released' => 'Number of Albums Released'
+            'no_of_albums_released' => 'Number of Albums Released',
+            'image' => 'Image'
         ];
     }
 

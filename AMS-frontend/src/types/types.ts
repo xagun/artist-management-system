@@ -18,6 +18,7 @@ export interface IUser {
     id: number;
     name: string;
     no_of_albums_released: number;
+    image:string
   }
 
 

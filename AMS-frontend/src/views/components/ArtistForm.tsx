@@ -3,7 +3,7 @@ import { useStateContext } from "@/context/ContextProvider";
 import { cn } from "@/lib/utils";
 import { IArtist } from "@/types/types";
 import axiosInstance from "@/utils/AxiosInstance";
-import { useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import moment from "moment";
 import { toast } from "sonner";
 
@@ -21,27 +21,37 @@ const ArtistForm = ({
     const [name, setName] = useState<string>("");
     const [firstRelease, setFirstRelease] = useState<string>("");
     const [gender, setGender] = useState<string>("");
-    const [albumsReleased, setAlbumsReleased] = useState<string>("");
+    const [albumsReleased, setAlbumsReleased] = useState<number>(0);
     const [address, setAddress] = useState<string>("");
     const [dob, setDob] = useState<string>("");
     const [error, setError] = useState<boolean>(false);
     const { setFullSpinner } = useStateContext();
     const [errorObj, setErrorObj] = useState<any>({});
+    const [image, setImage] = useState<File | null>(null);
+    const [imagePreview, setImagePreview] = useState<string>("");
 
     const minDate = new Date("1900-01-01").toISOString().split("T")[0];
 
     const handleAddArtist = async () => {
         setFullSpinner(true);
-        const params = {
-            name: name,
-            dob: dob,
-            gender: gender,
-            address: address,
-            first_release_year: firstRelease,
-            no_of_albums_released: albumsReleased,
-        };
+
+        const formData = new FormData();
+        formData.append("name", name);
+        formData.append("dob", dob);
+        formData.append("gender", gender);
+        formData.append("address", address);
+        formData.append("first_release_year", firstRelease);
+        formData.append("no_of_albums_released", albumsReleased.toString());
+        if (image) {
+            formData.append("image", image);
+        }
+
         try {
-            const res = await axiosInstance.post("/artist", params);
+            const res = await axiosInstance.post("/artist", formData, {
+                headers: {
+                    "Content-Type": "multipart/form-data",
+                },
+            });
             if (res.status === 200 && res.data.success === true) {
                 toast.success(res.data.message);
                 handleDialog();
@@ -57,18 +67,26 @@ const ArtistForm = ({
 
     const handleUpdateArtist = async () => {
         setFullSpinner(true);
-        const params = {
-            name: name,
-            dob: dob,
-            gender: gender,
-            address: address,
-            first_release_year: firstRelease,
-            no_of_albums_released: albumsReleased,
-        };
+
+        const formData = new FormData();
+        formData.append("name", name);
+        formData.append("dob", dob);
+        formData.append("gender", gender);
+        formData.append("address", address);
+        formData.append("first_release_year", firstRelease);
+        formData.append("no_of_albums_released", albumsReleased.toString());
+        if (image) {
+            formData.append("image", image);
+        }
         try {
             const res = await axiosInstance.post(
                 `/artist/update/${artistUpdateReq.id}`,
-                params
+                formData,
+                {
+                    headers: {
+                        "Content-Type": "multipart/form-data",
+                    },
+                }
             );
             if (res.status === 200 && res.data.success === true) {
                 toast.success(res.data.message);
@@ -88,12 +106,10 @@ const ArtistForm = ({
         if (artistUpdateReq && updateAction) {
             setName(artistUpdateReq.name);
             setGender(artistUpdateReq.gender);
-            setAddress(artistUpdateReq.address);
+            setAddress(artistUpdateReq.address === "null" ? "" : address);
             setFirstRelease(artistUpdateReq.first_release_year);
-            setAlbumsReleased(
-                artistUpdateReq.no_of_albums_released?.toString()
-            );
-
+            setAlbumsReleased(artistUpdateReq.no_of_albums_released || 0);
+            setImagePreview(artistUpdateReq.image);
             let newD = moment(artistUpdateReq.dob, "MMMM D, YYYY").format(
                 "YYYY-MM-DD"
             );
@@ -101,9 +117,33 @@ const ArtistForm = ({
         }
     }, []);
 
+    const handleFileInputChange = (
+        event: ChangeEvent<HTMLInputElement>
+    ): void => {
+        const file = event.target.files?.[0];
+        if (file) {
+            const imageURL = URL.createObjectURL(file);
+            setImage(file);
+            setImagePreview(imageURL);
+        }
+    };
+
     return (
         <div className="w-full">
             <div className="flex flex-col space-y-3">
+                {(imagePreview || image) && (
+                    <div className="flex items-center justify-center">
+                        <img
+                            className="rounded-full overflow-hidden object-cover h-52 w-52"
+                            src={image ? imagePreview : artistUpdateReq.image}
+                        />
+                    </div>
+                )}
+
+                <input type="file" onChange={handleFileInputChange} />
+                <span className="text-red-500 text-[10px]">
+                    {errorObj?.image}
+                </span>
                 <div className="flex gap-4 max-sm:flex-col">
                     <div className="flex flex-col space-y-1 w-full">
                         <label
@@ -125,7 +165,7 @@ const ArtistForm = ({
                             )}
                         />
                         <span className="text-red-500 text-[10px]">
-                            {errorObj.name}
+                            {errorObj?.name}
                         </span>
                     </div>
                 </div>
@@ -153,7 +193,7 @@ const ArtistForm = ({
                             )}
                         />
                         <span className="text-red-500 text-[10px]">
-                            {errorObj.dob}
+                            {errorObj?.dob}
                         </span>
                     </div>
                     <div className="flex flex-col space-y-1 w-full">
@@ -182,7 +222,7 @@ const ArtistForm = ({
                             <option value="o">Others</option>
                         </select>
                         <span className="text-red-500 text-[10px]">
-                            {errorObj.gender}
+                            {errorObj?.gender}
                         </span>
                     </div>
                 </div>
@@ -214,7 +254,7 @@ const ArtistForm = ({
                             )}
                         />
                         <span className="text-red-500 text-[10px]">
-                            {errorObj.first_release_year}
+                            {errorObj?.first_release_year}
                         </span>
                     </div>
                     <div className="flex flex-col space-y-1 w-full">
@@ -229,11 +269,12 @@ const ArtistForm = ({
 
                         <input
                             placeholder="Enter no. of albums released"
-                            type="text"
-                            pattern="[0-9]{4}"
+                            type="number"
                             id="albumsReleased"
                             value={albumsReleased}
-                            onChange={(e) => setAlbumsReleased(e.target.value)}
+                            onChange={(e) =>
+                                setAlbumsReleased(parseInt(e.target.value))
+                            }
                             className={cn("inputClass")}
                         />
                     </div>
