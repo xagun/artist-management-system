@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rules\Password;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class UserController extends Controller
@@ -43,8 +44,7 @@ class UserController extends Controller
             DB::beginTransaction();
             $this->userService->registerUser($validatedData);
             DB::commit();
-        }
-        catch (\Exception $exception) {
+        } catch (\Exception $exception) {
             logger($exception);
 
             return response()->json([
@@ -53,11 +53,9 @@ class UserController extends Controller
             ], 500);
         }
         return response()->json([
-            'success' => 'true',
+            'success' => true,
             'message' => 'User registration successful.'
         ], 200);
-
-
     }
 
 
@@ -68,7 +66,8 @@ class UserController extends Controller
      *
      * @return JsonResponse
      */
-    public function login(LoginRequest $request):JsonResponse {
+    public function login(LoginRequest $request): JsonResponse
+    {
         $validatedData = $request->validated();
 
         try {
@@ -105,8 +104,8 @@ class UserController extends Controller
         }
 
         return response()->json([
-            'success' => 'true',
-            'message' => 'User login successfull.',
+            'success' => true,
+            'message' => 'User logged in successfully.',
             'data'    => $responseData
 
         ], 200);
@@ -122,7 +121,6 @@ class UserController extends Controller
         try {
             $user = Auth::user();
             $user->currentAccessToken()->delete();
-
         } catch (\Exception $exception) {
             logger($exception);
             return response()->json([
@@ -144,9 +142,16 @@ class UserController extends Controller
      *
      * @return JsonResponse
      */
-    public function getAllUser():JsonResponse
+    public function getAllUser(): JsonResponse
     {
+        $authUserId = Auth::id();
         $allUsers = $this->userService->getAllUser();
+
+        (array) $allUsers = array_filter($allUsers, function ($user) use ($authUserId) {
+            return $user->id !== $authUserId;
+        });
+
+        $allUsers = array_values($allUsers);
 
         return response()->json([
             'success' => true,
@@ -162,7 +167,7 @@ class UserController extends Controller
      *
      * @return JsonResponse
      */
-    public function deleteUser(Request $request):JsonResponse
+    public function deleteUser(Request $request): JsonResponse
     {
         try {
             $user = $this->userService->getUserByEmail($request['email']);
@@ -193,6 +198,12 @@ class UserController extends Controller
     }
 
 
+    /**
+     * @param UserUpdateRequest $request
+     * @param mixed $userId
+     *
+     * @return JsonResponse
+     */
     public function updateUser(UserUpdateRequest $request, $userId): JsonResponse
     {
         $validatedData = $request->validated();
@@ -226,7 +237,40 @@ class UserController extends Controller
             'success' => true,
             'message' => 'User records updated successfully'
         ], 200);
-
     }
 
+
+    public function updatePassword(Request $request)
+    {
+
+        $validatedData = $request->validate([
+            "old_password" => "required",
+            "password" => ["required", "confirmed", Password::min(8)]
+        ]);
+
+        try {
+
+            $user = Auth::user();
+
+            if (!Hash::check($validatedData['old_password'], $user['password'])) {
+                return response()->json([
+                    'success' => false,
+                    'message' => "The password provided is incorrect."
+                ], 400);
+            }
+
+            $this->userService->updatePassword($validatedData['password'], $user->id);
+        } catch (\Exception $error) {
+            logger($error);
+
+            return response()->json([
+                'success' => false,
+                'message' =>  $error->getMessage()
+            ], 500);
+        }
+        return response()->json([
+            'success' => true,
+            'message' => 'User password updated successfully'
+        ], 200);
+    }
 }

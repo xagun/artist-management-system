@@ -6,17 +6,24 @@ use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 
-Route::controller(UserController::class)->group(function (){
+Route::controller(UserController::class)->group(function () {
     Route::post('/register', 'register');
     Route::post('/login', 'login');
-    Route::post('/logout', 'logout')->middleware('auth:sanctum');
-    Route::get('/users','getAllUser')->middleware('auth:sanctum');
-    Route::post('/user/delete', 'deleteUser')->middleware('auth:sanctum');
-    Route::post('/user/update/{id}', 'updateUser')->middleware('auth:sanctum');
+
+    //Auth routes
+    Route::middleware('auth:sanctum')->group(
+        function () {
+            Route::post('/logout', 'logout');
+            Route::get('/users', 'getAllUser');
+            Route::post('/user/delete', 'deleteUser');
+            Route::post('/user/update/{id}', 'updateUser');
+            Route::post('/user/update-password', 'updatePassword');
+        }
+    );
 });
 
 
-Route::middleware('auth:sanctum')->group(function(){
+Route::middleware('auth:sanctum')->group(function () {
     //artists routes
     Route::get('/artist', [ArtistController::class, 'index']);
     Route::post('/artist', [ArtistController::class, 'store']);
@@ -30,7 +37,4 @@ Route::middleware('auth:sanctum')->group(function(){
     Route::get('/artist-music/{id}', [MusicController::class, 'getMusicByArtist']);
     Route::post('/music/update/{id}', [MusicController::class, 'update']);
     Route::delete('/music/delete/{id}', [MusicController::class, 'destroy']);
-
-
 });
-
