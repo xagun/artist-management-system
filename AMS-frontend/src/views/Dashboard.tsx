@@ -1,10 +1,11 @@
-import { IMusic } from "@/types/types";
+import { IArtist, IMusic } from "@/types/types";
 import axiosInstance from "@/utils/AxiosInstance";
 import { HeartIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 
 export default function Dashboard() {
     const [musicList, setMusicList] = useState<IMusic[]>([]);
+    const [allArtists, setAllArtists] = useState<IArtist[]>([]);
 
     const getAllMusic = async () => {
         try {
@@ -19,6 +20,7 @@ export default function Dashboard() {
 
     useEffect(() => {
         getAllMusic();
+        getAllArtist();
     }, []);
 
     const recentlyAddedMusic = [...musicList].sort(
@@ -26,8 +28,8 @@ export default function Dashboard() {
             new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
     );
 
-    const randomPicks = (nums: number) => {
-        const arrayCopy = [...musicList];
+    const randomPicks = (array: any, nums: number) => {
+        const arrayCopy = [...array];
 
         for (let i = arrayCopy.length - 1; i > 0; i--) {
             const j = Math.floor(Math.random() * (i + 1));
@@ -35,6 +37,17 @@ export default function Dashboard() {
         }
 
         return arrayCopy.slice(0, nums);
+    };
+
+    const getAllArtist = async () => {
+        try {
+            const res = await axiosInstance.get("/artist");
+            if (res.status === 200 && res.data.success === true) {
+                setAllArtists(res.data.data);
+            }
+        } catch (err) {
+            console.log(err);
+        }
     };
 
     return (
@@ -70,51 +83,27 @@ export default function Dashboard() {
                     <div className="w-full">
                         <h1 className="text-2xl my-6">Popular artists</h1>
                         <div className="flex w-full overflow-x-auto overflow-y-hidden justify-between gap-3">
-                            <div className="flex flex-col items-center gap-3 flex-none">
-                                <img
-                                    className="w-20 h-20 sm:w-24 sm:h-24 rounded-full object-cover"
-                                    src="https://static01.nyt.com/images/2024/04/08/multimedia/08xp-jcole/08xp-jcole-videoSixteenByNineJumbo1600.jpg"
-                                ></img>
-                                <span className="text-xs sm:text-[14px] text-center">
-                                    J. Cole
-                                </span>
-                            </div>
-                            <div className="flex flex-col items-center gap-3 flex-none">
-                                <img
-                                    className="w-20 h-20 sm:w-24 sm:h-24 rounded-full object-cover"
-                                    src="https://i.discogs.com/0yrvD2ARf57J0mfwV0EdRX4MqhvNJpDtb6OoFjhO9C8/rs:fit/g:sm/q:90/h:594/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTIwMzE2/MTU3LTE2Mzc1MzMw/MzMtNjQ5MS5qcGVn.jpeg"
-                                ></img>
-                                <span className="text-xs sm:text-[14px]">
-                                    The Weekend
-                                </span>
-                            </div>{" "}
-                            <div className="flex flex-col items-center gap-3 flex-none">
-                                <img
-                                    className="w-20 h-20 sm:w-24 sm:h-24 rounded-full object-cover"
-                                    src="https://wallpapers.com/images/featured/xxxtentacion-oqmpwpzjp4prpxan.jpg"
-                                ></img>
-                                <span className="text-xs sm:text-[14px]">
-                                    XXXTentacion
-                                </span>
-                            </div>{" "}
-                            <div className="flex flex-col items-center gap-3 flex-none">
-                                <img
-                                    className="w-20 h-20 sm:w-24 sm:h-24 rounded-full object-cover"
-                                    src="https://thefader-res.cloudinary.com/images/w_1440,c_limit,f_auto,q_auto:eco/arjml6zonrftniqprqbm/wiz-khalifa.jpg"
-                                ></img>
-                                <span className="text-xs sm:text-[14px]">
-                                    Wiz Khalife
-                                </span>
-                            </div>{" "}
-                            <div className="flex flex-col items-center gap-3 flex-none">
-                                <img
-                                    className="w-20 h-20 sm:w-24 sm:h-24 rounded-full object-cover"
-                                    src="https://images-r2.thebrag.com/td/uploads/2019/11/fkatwigs-5-768x435.jpg"
-                                ></img>
-                                <span className="text-xs sm:text-[14px]">
-                                    Bellie Eilish
-                                </span>
-                            </div>
+                            {allArtists.length > 0
+                                ? randomPicks(allArtists, 6).map(
+                                      (artist, key) => (
+                                          <div
+                                              key={key}
+                                              className="flex flex-col items-center gap-3 flex-none"
+                                          >
+                                              <img
+                                                  className="w-20 h-20 sm:w-24 sm:h-24 rounded-full object-cover"
+                                                  src={
+                                                      artist.image ||
+                                                      "fallback.png"
+                                                  }
+                                              />
+                                              <span className="text-xs sm:text-[14px] text-center">
+                                                  {artist.name}
+                                              </span>
+                                          </div>
+                                      )
+                                  )
+                                : "No records found"}
                         </div>
                     </div>
                 </div>
@@ -149,30 +138,32 @@ export default function Dashboard() {
                 <h1 className="text-2xl my-6">Top picks today</h1>
 
                 <div className="h-full overflow-y-auto text-sm">
-                    {randomPicks(7).length > 0
-                        ? randomPicks(7).map((music: IMusic, key) => (
-                              <div
-                                  key={key}
-                                  className="flex border-b-2 py-4 justify-between"
-                              >
-                                  <div className="w-[40%]">
-                                      <span className="font-semibold">
-                                          {music.title}
-                                      </span>
-                                  </div>
-                                  <div className="w-[30%]">
-                                      <span className="font-normal">
-                                          {music.artist_name}
-                                      </span>
-                                  </div>
+                    {musicList.length > 0
+                        ? randomPicks(musicList, 5).map(
+                              (music: IMusic, key) => (
+                                  <div
+                                      key={key}
+                                      className="flex border-b-2 py-4 justify-between"
+                                  >
+                                      <div className="w-[40%]">
+                                          <span className="font-semibold">
+                                              {music.title}
+                                          </span>
+                                      </div>
+                                      <div className="w-[30%]">
+                                          <span className="font-normal">
+                                              {music.artist_name}
+                                          </span>
+                                      </div>
 
-                                  <div className="w-[30%] hidden md:flex">
-                                      <span className="font-normal capitalize">
-                                          {music.genre}
-                                      </span>
+                                      <div className="w-[30%] hidden md:flex">
+                                          <span className="font-normal capitalize">
+                                              {music.genre}
+                                          </span>
+                                      </div>
                                   </div>
-                              </div>
-                          ))
+                              )
+                          )
                         : "No picks today"}
                 </div>
             </div>

@@ -68,7 +68,7 @@ export default function Login() {
                             "inputClass",
                             (error && email === "") ||
                                 (errorObj &&
-                                    errorObj.email &&
+                                    errorObj?.email &&
                                     "inputErrorClass")
                         )}
                     />
@@ -99,7 +99,7 @@ export default function Login() {
                             "inputClass",
                             (error && password === "") ||
                                 (errorObj &&
-                                    errorObj.password &&
+                                    errorObj?.password &&
                                     "inputErrorClass")
                         )}
                     />

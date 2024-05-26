@@ -7,6 +7,7 @@ use App\Services\ArtistService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class ArtistController extends Controller
@@ -51,15 +52,20 @@ class ArtistController extends Controller
 
         try {
             DB::beginTransaction();
+            // $this->artistService->store($validatedData);
+            // Handle image upload
+            if ($request->hasFile('image')) {
+                $imagePath = $request->file('image')->store('images', 'public');
+                $validatedData['image'] = $imagePath;
+            }
             $this->artistService->store($validatedData);
-
             DB::commit();
         } catch (\Exception $exception) {
             logger($exception);
 
             return response()->json([
                 'success' => false,
-                'message' => "Something went wrong"
+                'message' => $exception->getMessage()
             ], 500);
         }
 
@@ -84,13 +90,17 @@ class ArtistController extends Controller
         try {
             DB::beginTransaction();
             $artist = $this->artistService->getArtistById($artistId);
-
             if (empty($artist)) {
                 throw new NotFoundHttpException('The requested resource doesnot exists.');
             }
-
+            if ($request->hasFile('image')) {
+                if ($artist['image']) {
+                    Storage::disk('public')->delete($artist['image']);
+                }
+                $imagePath = $request->file('image')->store('images', 'public');
+                $validatedData['image'] = $imagePath;
+            }
             $this->artistService->update($validatedData, $artistId);
-
             DB::commit();
         } catch (NotFoundHttpException $exception) {
             return response()->json([
@@ -103,7 +113,8 @@ class ArtistController extends Controller
 
             return response()->json([
                 'success' => false,
-                'message' => "Something went wrong."
+                'message' => $exception->getMessage()
+
             ], 500);
         }
 
