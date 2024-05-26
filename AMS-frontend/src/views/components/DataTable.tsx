@@ -22,6 +22,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
 import React from "react";
+import { ChevronLeft, ChevronRight, SearchIcon } from "lucide-react";
 
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[];
@@ -58,7 +59,7 @@ export function DataTable<TData, TValue>({
 
     return (
         <div>
-            <div className="flex items-center py-4">
+            <div className="flex items-center py-4 gap-4">
                 <Input
                     placeholder={`Search by ${filterDataLabel}`}
                     value={
@@ -71,15 +72,19 @@ export function DataTable<TData, TValue>({
                             .getColumn(filterData)
                             ?.setFilterValue(event.target.value)
                     }
-                    className="max-w-sm"
+                    className="max-w-sm rounded-[20px]"
                 />
+                <SearchIcon className="text-gray-500" />
             </div>
 
-            <div className="rounded-md border">
+            <div className="rounded-md">
                 <Table>
                     <TableHeader>
                         {table.getHeaderGroups().map((headerGroup) => (
-                            <TableRow key={headerGroup.id}>
+                            <TableRow
+                                key={headerGroup.id}
+                                className="border-primary"
+                            >
                                 {headerGroup.headers.map((header) => {
                                     return (
                                         <TableHead
@@ -111,7 +116,7 @@ export function DataTable<TData, TValue>({
                                     {row.getVisibleCells().map((cell) => (
                                         <TableCell
                                             key={cell.id}
-                                            className="bg-white py-2"
+                                            className="bg-white py-3"
                                         >
                                             {flexRender(
                                                 cell.column.columnDef.cell,
@@ -140,16 +145,18 @@ export function DataTable<TData, TValue>({
                     size="sm"
                     onClick={() => table.previousPage()}
                     disabled={!table.getCanPreviousPage()}
+                    className="rounded-[20px]"
                 >
-                    Previous
+                    <ChevronLeft />
                 </Button>
                 <Button
                     variant="outline"
                     size="sm"
                     onClick={() => table.nextPage()}
                     disabled={!table.getCanNextPage()}
+                    className="rounded-[20px]"
                 >
-                    Next
+                    <ChevronRight />
                 </Button>
             </div>
         </div>
