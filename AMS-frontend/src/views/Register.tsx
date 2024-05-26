@@ -73,7 +73,6 @@ const Register = ({
             gender: gender,
             address: address,
             phone: phone,
-            email: email,
         };
         try {
             const res = await axiosInstance.post(
@@ -281,6 +280,7 @@ const Register = ({
                             "inputClass",
                             error && email === "" && errorClass
                         )}
+                        disabled={updateAction}
                     />
                 </div>
                 {!updateAction && (

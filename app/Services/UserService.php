@@ -99,7 +99,6 @@ class UserService
             "UPDATE users
          SET first_name = ?,
              last_name = ?,
-             email = ?,
              gender = ?,
              dob = ?,
              phone = ?,
@@ -109,7 +108,6 @@ class UserService
             [
                 $data['first_name'],
                 $data['last_name'],
-                $data['email'],
                 $data['gender'],
                 $data['dob'],
                 $data['phone'],

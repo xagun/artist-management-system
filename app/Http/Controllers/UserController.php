@@ -49,7 +49,7 @@ class UserController extends Controller
 
             return response()->json([
                 'success' => false,
-                'message' => $exception->getMessage()
+                'message' => "Something went wrong"
             ], 500);
         }
         return response()->json([
@@ -99,7 +99,7 @@ class UserController extends Controller
 
             return response()->json([
                 'success' => false,
-                'message' => $exception->getMessage()
+                'message' => "Something went wrong"
             ], 500);
         }
 
@@ -221,7 +221,7 @@ class UserController extends Controller
         } catch (NotFoundHttpException $exception) {
             return response()->json([
                 'success' => false,
-                'message' => $exception->getMessage()
+                'message' => "Something went wrong"
 
             ], 404);
         } catch (\Exception $exception) {
@@ -229,13 +229,13 @@ class UserController extends Controller
 
             return response()->json([
                 'success' => false,
-                'message' =>  $exception->getMessage()
+                'message' =>  "Something wnet wrong"
             ], 500);
         }
 
         return response()->json([
             'success' => true,
-            'message' => 'User records updated successfully'
+            'message' => 'User record updated successfully'
         ], 200);
     }
 
@@ -246,6 +246,8 @@ class UserController extends Controller
         $validatedData = $request->validate([
             "old_password" => "required",
             "password" => ["required", "confirmed", Password::min(8)]
+        ], [
+            'old_password.required' => 'Current password field is required.',
         ]);
 
         try {
