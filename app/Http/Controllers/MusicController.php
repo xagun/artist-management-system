@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\DB;
 
 class MusicController extends Controller
 {
-         /**
+    /**
      * @var MusicService
      */
     protected MusicService $musicService;
@@ -24,17 +24,18 @@ class MusicController extends Controller
     }
 
 
-public function index(){
-    $musicList = $this->musicService->getAllMusic();
+    public function index()
+    {
+        $musicList = $this->musicService->getAllMusic();
 
-    return response()->json([
-        'success' => true,
-        'data' => $musicList
-    ], 200);
-}
+        return response()->json([
+            'success' => true,
+            'data' => $musicList
+        ], 200);
+    }
 
 
-     /**
+    /**
      * Store Music data.
      *
      * @param MusicRequest $request
@@ -52,7 +53,7 @@ public function index(){
 
             return response()->json([
                 'success' => true,
-                'message' => "Music Stored successfully."
+                'message' => "Music stored successfully."
             ]);
         } catch (\Exception $e) {
             logger($e);
@@ -89,22 +90,21 @@ public function index(){
         ], 200);
     }
 
-    public function getMusicByArtist($artistId):JsonResponse
+    public function getMusicByArtist($artistId): JsonResponse
     {
         $music = $this->musicService->getMusicByArtist($artistId);
-        if (empty($music)) {
-            return response()->json([
-                'success' => false,
-                'message' => "The request resource is not available."
-            ], 404);
-        }
+        // if (empty($music)) {
+        //     return response()->json([
+        //         'success' => false,
+        //         'message' => "The request resource is not available."
+        //     ], 404);
+        // }
 
         return response()->json([
             'success' => true,
             'message' => "Music data fetched successfully.",
             'data' => $music
         ], 200);
-
     }
     /**
      * Update Music data.

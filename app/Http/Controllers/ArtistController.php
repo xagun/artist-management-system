@@ -11,7 +11,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class ArtistController extends Controller
 {
-       /**
+    /**
      * @var ArtistService
      */
     protected ArtistService $artistService;
@@ -69,7 +69,7 @@ class ArtistController extends Controller
         ], 200);
     }
 
-        /**
+    /**
      * Update the artist table data.
      *
      * @param ArtistRequest $request
@@ -142,7 +142,6 @@ class ArtistController extends Controller
 
             ], 404);
         } catch (\Exception $exception) {
-            dd($exception);
             logger($exception);
 
             return response()->json([

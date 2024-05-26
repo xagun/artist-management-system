@@ -105,7 +105,7 @@ class UserController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'User login successfull.',
+            'message' => 'User logged in successfully.',
             'data'    => $responseData
 
         ], 200);
@@ -245,24 +245,22 @@ class UserController extends Controller
 
         $validatedData = $request->validate([
             "old_password" => "required",
-            "password" => ["required", "confirmed", Password::min(8)->uncompromised()]
+            "password" => ["required", "confirmed", Password::min(8)]
         ]);
 
-        try{
+        try {
 
-        $user = Auth::user();
+            $user = Auth::user();
 
-        if (!Hash::check($validatedData['old_password'], $user['password'])) {
-            return response()->json([
-                'success' => false,
-                'message' => "The password provided is incorrect."
-            ], 400);
-        }
+            if (!Hash::check($validatedData['old_password'], $user['password'])) {
+                return response()->json([
+                    'success' => false,
+                    'message' => "The password provided is incorrect."
+                ], 400);
+            }
 
-        $this->userService->updatePassword($validatedData['password'], $user->id);
-
-        }
-        catch(\Exception $error){
+            $this->userService->updatePassword($validatedData['password'], $user->id);
+        } catch (\Exception $error) {
             logger($error);
 
             return response()->json([

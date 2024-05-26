@@ -25,9 +25,9 @@ class ArtistRequest extends FormRequest
             'name' => 'required',
             'dob' => 'required|date',
             'gender' => 'required|in:m,f,o',
-            'address' => 'required',
+            'address' => 'nullable',
             'first_release_year' => 'required|digits:4',
-            'no_of_albums_released' => 'required|integer'
+            'no_of_albums_released' => 'nullable|integer'
         ];
     }
 
