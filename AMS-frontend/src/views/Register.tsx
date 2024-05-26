@@ -35,6 +35,7 @@ const Register = ({
     const [dob, setDob] = useState<string>("");
     const [cPassword, setCPassword] = useState<string>("");
     const [error, setError] = useState<boolean>(false);
+    const [errorObj, setErrorObj] = useState<any>({});
 
     const { setUser, setFullSpinner } = useStateContext();
     const navigate = useNavigate();
@@ -64,8 +65,8 @@ const Register = ({
             }
         } catch (err: any) {
             setFullSpinner(false);
-
-            toast.error(err.response.data.message);
+            setErrorObj(err.response.data.errors);
+            // toast.error(err.response.data.message);
             setError(true);
             console.log(err);
         }
@@ -103,9 +104,9 @@ const Register = ({
             }
         } catch (err: any) {
             setFullSpinner(false);
-
+            setErrorObj(err?.response?.data?.errors);
             setError(true);
-            toast.error(err.response.data.message);
+            // toast.error(err.response.data.message);
         }
     };
 
@@ -161,6 +162,9 @@ const Register = ({
                                 error && firstName === "" && "inputErrorClass"
                             )}
                         />
+                        <span className="text-red-500 text-[10px]">
+                            {errorObj.first_name}
+                        </span>
                     </div>
                     <div className="flex flex-col space-y-1 w-full">
                         <label
@@ -180,6 +184,9 @@ const Register = ({
                                 error && lastName === "" && "inputErrorClass"
                             )}
                         />
+                        <span className="text-red-500 text-[10px]">
+                            {errorObj.last_name}
+                        </span>
                     </div>
                 </div>
 
@@ -204,6 +211,9 @@ const Register = ({
                                 error && dob === "" && "inputErrorClass"
                             )}
                         />
+                        <span className="text-red-500 text-[10px]">
+                            {errorObj.dob}
+                        </span>
                     </div>
                     <div className="flex flex-col space-y-1 w-full">
                         <div className="flex items-center justify-between">
@@ -230,6 +240,9 @@ const Register = ({
                             <option value="f">Female</option>
                             <option value="o">Others</option>
                         </select>
+                        <span className="text-red-500 text-[10px]">
+                            {errorObj.gender}
+                        </span>
                     </div>
                 </div>
 
@@ -273,6 +286,9 @@ const Register = ({
                                 error && phone === "" && "inputErrorClass"
                             )}
                         />
+                        <span className="text-red-500 text-[10px]">
+                            {errorObj.phone}
+                        </span>
                     </div>
                 </div>
 
@@ -295,6 +311,9 @@ const Register = ({
                         )}
                         disabled={updateAction}
                     />
+                    <span className="text-red-500 text-[10px]">
+                        {errorObj.email}
+                    </span>
                 </div>
                 {!updateAction && (
                     <div className="flex flex-col space-y-1">
@@ -315,9 +334,15 @@ const Register = ({
                             onChange={(e) => setPassword(e.target.value)}
                             className={cn(
                                 "inputClass",
-                                error && password === "" && "inputErrorClass"
+                                (error && password === "") ||
+                                    (error &&
+                                        errorObj.password &&
+                                        "inputErrorClass")
                             )}
                         />
+                        <span className="text-red-500 text-[10px]">
+                            {errorObj.password}
+                        </span>
                     </div>
                 )}
                 {!updateAction && (
@@ -339,9 +364,15 @@ const Register = ({
                             onChange={(e) => setCPassword(e.target.value)}
                             className={cn(
                                 "inputClass",
-                                error && cPassword === "" && "inputErrorClass"
+                                (error && cPassword === "") ||
+                                    (error &&
+                                        errorObj.password_confirmation &&
+                                        "inputErrorClass")
                             )}
                         />
+                        <span className="text-red-500 text-[10px]">
+                            {errorObj.password_confirmation}
+                        </span>
                     </div>
                 )}
 

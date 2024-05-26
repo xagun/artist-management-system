@@ -26,7 +26,7 @@ class ArtistRequest extends FormRequest
             'dob' => 'required|date|after_or_equal:1901-01-01',
             'gender' => 'required|in:m,f,o',
             'address' => 'nullable',
-            'first_release_year' => 'required|date_format:Y|digits:4|min:1901',
+            'first_release_year' => 'required|date_format:Y|digits:4|after:1901',
             'no_of_albums_released' => 'nullable|integer'
         ];
     }

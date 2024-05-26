@@ -34,6 +34,7 @@ const ProfilePopover = () => {
     const [error, setError] = useState<boolean>(false);
 
     const [updateReqData, setUpdateReqData] = useState<IUser>({} as IUser);
+    const [errorObj, setErrorObj] = useState<any>({});
 
     const userString = localStorage.getItem("userDetails");
     const user = userString ? JSON.parse(userString) : null;
@@ -75,7 +76,9 @@ const ProfilePopover = () => {
                 handlePasswordDialog();
             }
         } catch (err: any) {
-            toast.error(err.response.data.message);
+            setErrorObj(err.response.data.errors);
+
+            // toast.error(err.response.data.message);
             setError(true);
             setFullSpinner(false);
         }
@@ -196,6 +199,9 @@ const ProfilePopover = () => {
                                                 "inputErrorClass"
                                         )}
                                     />
+                                    <span className="text-red-500 text-[10px]">
+                                        {errorObj?.old_password}
+                                    </span>
                                 </div>
                                 <div className="flex flex-col space-y-1 mt-4">
                                     <div className="flex items-center justify-between">
@@ -221,6 +227,9 @@ const ProfilePopover = () => {
                                                 "inputErrorClass"
                                         )}
                                     />
+                                    <span className="text-red-500 text-[10px]">
+                                        {errorObj?.password}
+                                    </span>
                                 </div>
                                 <div className="flex flex-col space-y-1 mt-4">
                                     <div className="flex items-center justify-between">
@@ -246,6 +255,9 @@ const ProfilePopover = () => {
                                                 "inputErrorClass"
                                         )}
                                     />
+                                    <span className="text-red-500 text-[10px]">
+                                        {errorObj?.password_confirmation}
+                                    </span>
                                 </div>
 
                                 <div className="text-end mt-4">

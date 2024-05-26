@@ -26,6 +26,7 @@ const ArtistForm = ({
     const [dob, setDob] = useState<string>("");
     const [error, setError] = useState<boolean>(false);
     const { setFullSpinner } = useStateContext();
+    const [errorObj, setErrorObj] = useState<any>({});
 
     const minDate = new Date("1900-01-01").toISOString().split("T")[0];
 
@@ -47,7 +48,8 @@ const ArtistForm = ({
                 setFullSpinner(false);
             }
         } catch (err: any) {
-            toast.error(err.response.data.message);
+            setErrorObj(err.response.data.errors);
+            // toast.error(err.response.data.message);
             setError(true);
             setFullSpinner(false);
         }
@@ -74,7 +76,8 @@ const ArtistForm = ({
                 setFullSpinner(false);
             }
         } catch (err: any) {
-            toast.error(err.response.data.message);
+            // toast.error(err.response.data.message);
+            setErrorObj(err.response.data.errors);
             setError(true);
             setFullSpinner(false);
             console.log(err);
@@ -121,6 +124,9 @@ const ArtistForm = ({
                                 error && name === "" && "inputErrorClass"
                             )}
                         />
+                        <span className="text-red-500 text-[10px]">
+                            {errorObj.name}
+                        </span>
                     </div>
                 </div>
 
@@ -146,6 +152,9 @@ const ArtistForm = ({
                                 error && dob === "" && "inputErrorClass"
                             )}
                         />
+                        <span className="text-red-500 text-[10px]">
+                            {errorObj.dob}
+                        </span>
                     </div>
                     <div className="flex flex-col space-y-1 w-full">
                         <div className="flex items-center justify-between">
@@ -172,6 +181,9 @@ const ArtistForm = ({
                             <option value="f">Female</option>
                             <option value="o">Others</option>
                         </select>
+                        <span className="text-red-500 text-[10px]">
+                            {errorObj.gender}
+                        </span>
                     </div>
                 </div>
 
@@ -191,7 +203,7 @@ const ArtistForm = ({
                             title="Enter a valid year (four digits)"
                             placeholder="First release year"
                             type="text"
-                            id="firsrReleaseYear"
+                            id="firstReleaseYear"
                             value={firstRelease}
                             onChange={(e) => setFirstRelease(e.target.value)}
                             className={cn(
@@ -201,6 +213,9 @@ const ArtistForm = ({
                                     "inputErrorClass"
                             )}
                         />
+                        <span className="text-red-500 text-[10px]">
+                            {errorObj.first_release_year}
+                        </span>
                     </div>
                     <div className="flex flex-col space-y-1 w-full">
                         <div className="flex items-center justify-between">

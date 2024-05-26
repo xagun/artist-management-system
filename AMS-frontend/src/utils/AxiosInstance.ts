@@ -1,6 +1,7 @@
 
 import axios, { AxiosError } from 'axios';
 import { redirect } from 'react-router-dom';
+import { toast } from 'sonner';
 
 const axiosInstance = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL,
@@ -41,7 +42,11 @@ axiosInstance.interceptors.response.use(
         if (customError.response.status === 401) {
           localStorage.clear();
           redirect("/");
-        } else {
+        }
+        else if(customError.response.status !== 422){
+            toast("Something went wrong")
+        }
+        else {
           // Log or handle other specific errors
           console.error('Response error:', customError.response);
         }

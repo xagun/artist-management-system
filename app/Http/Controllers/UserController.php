@@ -245,7 +245,8 @@ class UserController extends Controller
 
         $validatedData = $request->validate([
             "old_password" => "required",
-            "password" => ["required", "confirmed", Password::min(8)]
+            "password" => ["required", "confirmed", Password::min(8)],
+            "password_confirmation" => ['required', "same:password"]
         ], [
             'old_password.required' => 'Current password field is required.',
         ]);

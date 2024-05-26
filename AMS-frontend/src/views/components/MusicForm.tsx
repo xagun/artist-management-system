@@ -21,6 +21,7 @@ const MusicForm = ({
     const [title, setTitle] = useState<string>("");
     const [genre, setGenre] = useState<string>("");
     const [error, setError] = useState<boolean>(false);
+    const [errorObj, setErrorObj] = useState<any>({});
 
     const { setFullSpinner } = useStateContext();
 
@@ -41,7 +42,10 @@ const MusicForm = ({
                 setFullSpinner(false);
             }
         } catch (err: any) {
-            toast.error(err.response.data.message);
+            // if (err.response.status !== 422) {
+            //     toast.error(err.response.data.message);
+            // }
+            setErrorObj(err.response.data.errors);
             setError(true);
             setFullSpinner(false);
         }
@@ -75,7 +79,10 @@ const MusicForm = ({
                 setFullSpinner(false);
             }
         } catch (err: any) {
-            toast.error(err.response.data.message);
+            // if (err.status !== 422) {
+            //     toast.error(err.response.data.message);
+            // }
+            setErrorObj(err.response.data.errors);
             setError(true);
             setFullSpinner(false);
         }
@@ -104,6 +111,9 @@ const MusicForm = ({
                             )}
                             autoFocus
                         />
+                        <span className="text-red-500 text-[10px]">
+                            {errorObj?.title}
+                        </span>
                     </div>
                 </div>
                 <div className="flex gap-4 max-sm:flex-col">
@@ -125,6 +135,9 @@ const MusicForm = ({
                                 error && albumName === "" && "inputErrorClass"
                             )}
                         />
+                        <span className="text-red-500 text-[10px]">
+                            {errorObj?.album_name}
+                        </span>
                     </div>
                 </div>
 
@@ -154,6 +167,9 @@ const MusicForm = ({
                             <option value="rock">Rock</option>
                             <option value="jazz">Jazz</option>
                         </select>
+                        <span className="text-red-500 text-[10px]">
+                            {errorObj?.genre}
+                        </span>
                     </div>
                 </div>
 
