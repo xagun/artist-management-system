@@ -70,10 +70,12 @@ const ArtistForm = ({
                 params
             );
             if (res.status === 200 && res.data.success === true) {
+                toast(res.data.message);
                 handleDialog();
                 setFullSpinner(false);
             }
-        } catch (err) {
+        } catch (err: any) {
+            toast(err.response.data.message);
             setError(true);
             setFullSpinner(false);
             console.log(err);
