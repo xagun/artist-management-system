@@ -125,13 +125,13 @@ export default function Music({
         try {
             const res = await axiosInstance.delete(`/music/delete/${id}`);
             if (res.status === 200 && res.data.success === true) {
-                toast(res.data.message);
+                toast.success(res.data.message);
                 setFullSpinner(false);
                 getMusicByArtist();
             }
         } catch (err: any) {
             setFullSpinner(false);
-            toast(err.response.data.message);
+            toast.error(err.response.data.message);
         }
     };
 

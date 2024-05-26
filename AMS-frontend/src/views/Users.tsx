@@ -24,6 +24,7 @@ import Register from "./Register";
 import DeleteDialog from "./components/DeleteDialog";
 import moment from "moment";
 import { toast } from "sonner";
+import { useStateContext } from "@/context/ContextProvider";
 
 export default function Users() {
     const [allUsers, setAllUsers] = useState<IUser[]>([]);
@@ -34,6 +35,8 @@ export default function Users() {
         useState<string>("");
 
     const [updateReqData, setUpdateReqData] = useState<IUser>({} as IUser);
+
+    const { setFullSpinner } = useStateContext();
 
     const handleDialogOpen = () => {
         setOpen(!open);
@@ -119,22 +122,30 @@ export default function Users() {
     ];
 
     const deleteUser = async (emailToDelete: string) => {
+        setFullSpinner(true);
+
         const param = {
             email: emailToDelete,
         };
         try {
             const res = await axiosInstance.post("/user/delete", param);
             if (res.status === 200 && res.data.success === true) {
-                toast(res.data.message);
+                setFullSpinner(false);
+
+                toast.success(res.data.message);
                 setSelectedEmailToDelete("");
                 getAllUsers();
             }
         } catch (err: any) {
-            toast(err.response.data.message);
+            setFullSpinner(false);
+
+            toast.error(err.response.data.message);
         }
     };
 
     const getAllUsers = async () => {
+        setFullSpinner(true);
+
         try {
             const res = await axiosInstance.get("/users");
             if (res.status === 200 && res.data.success === true) {
@@ -142,10 +153,14 @@ export default function Users() {
                 usersData.forEach((user: IUser) => {
                     user.dob = moment(new Date(user.dob)).format("LL");
                 });
+                setFullSpinner(false);
+
                 setAllUsers(usersData);
             }
         } catch (err: any) {
-            toast(err.response.data.message);
+            setFullSpinner(false);
+
+            toast.error(err.response.data.message);
         }
     };
 

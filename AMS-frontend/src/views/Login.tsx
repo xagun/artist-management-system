@@ -27,10 +27,10 @@ export default function Login() {
                 setUser(res.data.data.user_details);
                 navigate("/dashboard");
                 setFullSpinner(false);
-                toast(res.data.message);
+                toast.success(res.data.message);
             }
         } catch (err: any) {
-            toast(err.response.data.message);
+            toast.error(err.response.data.message);
             setFullSpinner(false);
             setError(true);
         }

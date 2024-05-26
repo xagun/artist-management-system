@@ -70,12 +70,12 @@ const ProfilePopover = () => {
                 params
             );
             if (res.status === 200 && res.data.success === true) {
-                toast(res.data.message);
+                toast.success(res.data.message);
                 setFullSpinner(false);
                 handlePasswordDialog();
             }
         } catch (err: any) {
-            toast(err.response.data.message);
+            toast.error(err.response.data.message);
             setError(true);
             setFullSpinner(false);
         }
@@ -95,7 +95,6 @@ const ProfilePopover = () => {
         }
     };
 
-    const errorClass = "border-red-300";
     return (
         <div className="flex items-center gap-6">
             <div className="border-r-1 border border-red-900 h-8 sm:h-10"></div>
@@ -194,7 +193,7 @@ const ProfilePopover = () => {
                                             "inputClass",
                                             error &&
                                                 currentPassword === "" &&
-                                                errorClass
+                                                "inputErrorClass"
                                         )}
                                     />
                                 </div>
@@ -219,7 +218,7 @@ const ProfilePopover = () => {
                                             "inputClass",
                                             (error ||
                                                 (error && password === "")) &&
-                                                errorClass
+                                                "inputErrorClass"
                                         )}
                                     />
                                 </div>
@@ -244,7 +243,7 @@ const ProfilePopover = () => {
                                             "inputClass",
                                             (error ||
                                                 (error && cPassword === "")) &&
-                                                errorClass
+                                                "inputErrorClass"
                                         )}
                                     />
                                 </div>

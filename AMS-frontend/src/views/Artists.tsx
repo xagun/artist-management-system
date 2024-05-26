@@ -149,6 +149,8 @@ export default function Artists() {
 
     const getAllArtist = async () => {
         setUpdateAction(false);
+        setFullSpinner(true);
+
         try {
             const res = await axiosInstance.get("/artist");
             if (res.status === 200 && res.data.success === true) {
@@ -158,8 +160,10 @@ export default function Artists() {
                 });
                 setAllArtists(res.data.data);
                 setArtistUpdateReq({} as IArtist);
+                setFullSpinner(false);
             }
         } catch (err) {
+            setFullSpinner(false);
             console.log(err);
         }
     };

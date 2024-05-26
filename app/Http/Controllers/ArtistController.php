@@ -95,7 +95,7 @@ class ArtistController extends Controller
         } catch (NotFoundHttpException $exception) {
             return response()->json([
                 'success' => false,
-                'message' => "Something went wrong"
+                'message' => $exception->getMessage()
 
             ], 404);
         } catch (\Exception $exception) {

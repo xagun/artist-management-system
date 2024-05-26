@@ -36,10 +36,12 @@ const Register = ({
     const [cPassword, setCPassword] = useState<string>("");
     const [error, setError] = useState<boolean>(false);
 
-    const { setUser } = useStateContext();
+    const { setUser, setFullSpinner } = useStateContext();
     const navigate = useNavigate();
 
     const handleRegister = async () => {
+        setFullSpinner(true);
+
         const params = {
             first_name: firstName,
             last_name: lastName,
@@ -54,21 +56,28 @@ const Register = ({
         try {
             const res = await axiosInstance.post("/register", params);
             if (res.status === 200 && res.data.success === true) {
-                toast(res.data.message);
+                toast.success(res.data.message);
+                setFullSpinner(false);
+
                 addUser && getAllUsers?.();
                 addUser ? handleCloseUserDialog?.() : navigate("/login");
             }
         } catch (err: any) {
-            toast(err.response.data.message);
+            setFullSpinner(false);
+
+            toast.error(err.response.data.message);
             setError(true);
             console.log(err);
         }
     };
 
     const updateUser = async () => {
+        setFullSpinner(true);
+
         const params = {
             first_name: firstName,
             last_name: lastName,
+            email: email,
             dob: dob,
             gender: gender,
             address: address,
@@ -80,7 +89,9 @@ const Register = ({
                 params
             );
             if (res.status === 200 && res.data.success === true) {
-                toast(res.data.message);
+                setFullSpinner(false);
+
+                toast.success(res.data.message);
                 profileUpdate
                     ? setUser({
                           ...params,
@@ -91,8 +102,10 @@ const Register = ({
                 handleCloseUserDialog?.();
             }
         } catch (err: any) {
+            setFullSpinner(false);
+
             setError(true);
-            toast(err.response.data.message);
+            toast.error(err.response.data.message);
         }
     };
 
@@ -108,8 +121,6 @@ const Register = ({
             setDob(newD);
         }
     }, [updateReqData]);
-
-    const errorClass = "border-red-300";
 
     return (
         <div className="w-full">
@@ -147,7 +158,7 @@ const Register = ({
                             autoFocus
                             className={cn(
                                 "inputClass",
-                                error && firstName === "" && errorClass
+                                error && firstName === "" && "inputErrorClass"
                             )}
                         />
                     </div>
@@ -166,7 +177,7 @@ const Register = ({
                             onChange={(e) => setLastName(e.target.value)}
                             className={cn(
                                 "inputClass",
-                                error && lastName === "" && errorClass
+                                error && lastName === "" && "inputErrorClass"
                             )}
                         />
                     </div>
@@ -189,7 +200,7 @@ const Register = ({
                             onChange={(e) => setDob(e.target.value)}
                             className={cn(
                                 "inputClass",
-                                error && dob === "" && errorClass
+                                error && dob === "" && "inputErrorClass"
                             )}
                         />
                     </div>
@@ -208,7 +219,7 @@ const Register = ({
                             onChange={(e) => setGender(e.target.value)}
                             className={cn(
                                 "inputClass",
-                                error && gender === "" && errorClass
+                                error && gender === "" && "inputErrorClass"
                             )}
                         >
                             <option value="" selected>
@@ -257,7 +268,7 @@ const Register = ({
                             onChange={(e) => setPhone(e.target.value)}
                             className={cn(
                                 "inputClass",
-                                error && phone === "" && errorClass
+                                error && phone === "" && "inputErrorClass"
                             )}
                         />
                     </div>
@@ -278,7 +289,7 @@ const Register = ({
                         onChange={(e) => setEmail(e.target.value)}
                         className={cn(
                             "inputClass",
-                            error && email === "" && errorClass
+                            error && email === "" && "inputErrorClass"
                         )}
                         disabled={updateAction}
                     />
@@ -301,7 +312,7 @@ const Register = ({
                             onChange={(e) => setPassword(e.target.value)}
                             className={cn(
                                 "inputClass",
-                                error && password === "" && errorClass
+                                error && password === "" && "inputErrorClass"
                             )}
                         />
                     </div>
@@ -324,7 +335,7 @@ const Register = ({
                             onChange={(e) => setCPassword(e.target.value)}
                             className={cn(
                                 "inputClass",
-                                error && cPassword === "" && errorClass
+                                error && cPassword === "" && "inputErrorClass"
                             )}
                         />
                     </div>

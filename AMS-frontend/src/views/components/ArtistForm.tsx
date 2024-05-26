@@ -25,10 +25,9 @@ const ArtistForm = ({
     const [address, setAddress] = useState<string>("");
     const [dob, setDob] = useState<string>("");
     const [error, setError] = useState<boolean>(false);
-
     const { setFullSpinner } = useStateContext();
 
-    const errorClass = "border-red-300";
+    const minDate = new Date("1900-01-01").toISOString().split("T")[0];
 
     const handleAddArtist = async () => {
         setFullSpinner(true);
@@ -43,12 +42,12 @@ const ArtistForm = ({
         try {
             const res = await axiosInstance.post("/artist", params);
             if (res.status === 200 && res.data.success === true) {
-                toast(res.data.message);
+                toast.success(res.data.message);
                 handleDialog();
                 setFullSpinner(false);
             }
         } catch (err: any) {
-            toast(err.response.data.message);
+            toast.error(err.response.data.message);
             setError(true);
             setFullSpinner(false);
         }
@@ -70,12 +69,12 @@ const ArtistForm = ({
                 params
             );
             if (res.status === 200 && res.data.success === true) {
-                toast(res.data.message);
+                toast.success(res.data.message);
                 handleDialog();
                 setFullSpinner(false);
             }
         } catch (err: any) {
-            toast(err.response.data.message);
+            toast.error(err.response.data.message);
             setError(true);
             setFullSpinner(false);
             console.log(err);
@@ -119,7 +118,7 @@ const ArtistForm = ({
                             autoFocus
                             className={cn(
                                 "inputClass",
-                                error && name === "" && errorClass
+                                error && name === "" && "inputErrorClass"
                             )}
                         />
                     </div>
@@ -140,9 +139,10 @@ const ArtistForm = ({
                             id="dob"
                             value={dob}
                             onChange={(e) => setDob(e.target.value)}
+                            min={minDate}
                             className={cn(
                                 "inputClass",
-                                error && dob === "" && errorClass
+                                error && dob === "" && "inputErrorClass"
                             )}
                         />
                     </div>
@@ -161,7 +161,7 @@ const ArtistForm = ({
                             onChange={(e) => setGender(e.target.value)}
                             className={cn(
                                 "inputClass",
-                                error && gender === "" && errorClass
+                                error && gender === "" && "inputErrorClass"
                             )}
                         >
                             <option value="" selected>
@@ -194,7 +194,9 @@ const ArtistForm = ({
                             onChange={(e) => setFirstRelease(e.target.value)}
                             className={cn(
                                 "inputClass",
-                                error && firstRelease === "" && errorClass
+                                error &&
+                                    firstRelease === "" &&
+                                    "inputErrorClass"
                             )}
                         />
                     </div>

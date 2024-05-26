@@ -22,8 +22,6 @@ const MusicForm = ({
     const [genre, setGenre] = useState<string>("");
     const [error, setError] = useState<boolean>(false);
 
-    const errorClass = "border-red-500";
-
     const { setFullSpinner } = useStateContext();
 
     const handleAddSong = async () => {
@@ -38,12 +36,12 @@ const MusicForm = ({
         try {
             const res = await axiosInstance.post("/music", params);
             if (res.status === 200 && res.data.success === true) {
-                toast(res.data.message);
+                toast.success(res.data.message);
                 handleMusicDialog();
                 setFullSpinner(false);
             }
         } catch (err: any) {
-            toast(err.response.data.message);
+            toast.error(err.response.data.message);
             setError(true);
             setFullSpinner(false);
         }
@@ -72,12 +70,12 @@ const MusicForm = ({
                 params
             );
             if (res.status === 200 && res.data.success === true) {
-                toast(res.data.message);
+                toast.success(res.data.message);
                 handleMusicDialog();
                 setFullSpinner(false);
             }
         } catch (err: any) {
-            toast(err.response.data.message);
+            toast.error(err.response.data.message);
             setError(true);
             setFullSpinner(false);
         }
@@ -102,7 +100,7 @@ const MusicForm = ({
                             onChange={(e) => setTitle(e.target.value)}
                             className={cn(
                                 "inputClass",
-                                error && title === "" && errorClass
+                                error && title === "" && "inputErrorClass"
                             )}
                             autoFocus
                         />
@@ -124,7 +122,7 @@ const MusicForm = ({
                             onChange={(e) => setAlbumName(e.target.value)}
                             className={cn(
                                 "inputClass",
-                                error && albumName === "" && errorClass
+                                error && albumName === "" && "inputErrorClass"
                             )}
                         />
                     </div>
@@ -144,7 +142,7 @@ const MusicForm = ({
                             onChange={(e) => setGenre(e.target.value)}
                             className={cn(
                                 "inputClass",
-                                error && genre === "" && errorClass
+                                error && genre === "" && "inputErrorClass"
                             )}
                         >
                             <option value="" selected>
