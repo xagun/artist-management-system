@@ -2,8 +2,8 @@ import { Button } from "@/components/ui/button";
 import { useStateContext } from "@/context/ContextProvider";
 import axiosInstance from "@/utils/AxiosInstance";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import FullWindowSpinner from "./components/FullWindowSpinner";
+import { Link, useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 
 export default function Login() {
     const [email, setEmail] = useState<string>("");
@@ -27,19 +27,26 @@ export default function Login() {
                 setUser(res.data.data.user_details);
                 navigate("/dashboard");
                 setFullSpinner(false);
+                toast(res.data.message);
             }
-        } catch (err) {
+        } catch (err: any) {
+            toast(err.response.data.message);
+            console.log(err.response.message);
             setFullSpinner(false);
             setError(true);
-            console.log(err);
         }
     };
 
     return (
         <div className="w-full">
-            <h3 className="my-4 text-2xl font-semibold text-gray-700">
-                Account Login
-            </h3>
+            <div className="py-4">
+                <h3 className="mb-2 text-2xl font-semibold text-gray-700">
+                    Login to your account
+                </h3>
+                <p className="text-sm text-gray-600">
+                    Enter you email and password to proceed
+                </p>
+            </div>
             <div className="flex flex-col space-y-5">
                 <div className="flex flex-col space-y-1">
                     <label
@@ -54,7 +61,7 @@ export default function Login() {
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         autoFocus
-                        className="px-4 py-2 transition duration-300 border border-gray-300 rounded focus:border-transparent focus:outline-none focus:ring-4 focus:ring-blue-200"
+                        className="inputClass"
                     />
                 </div>
                 <div className="flex flex-col space-y-1">
@@ -71,16 +78,23 @@ export default function Login() {
                         id="password"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
-                        className="px-4 py-2 transition duration-300 border border-gray-300 rounded focus:border-transparent focus:outline-none focus:ring-4 focus:ring-blue-200"
+                        className="inputClass"
                     />
                 </div>
-
-                <Button
-                    className="w-[140px] px-4 py-2 text-sm font-semibold text-white transition-colors duration-300 bg-blue-500 rounded-md shadow hover:bg-blue-600 focus:outline-none focus:ring-blue-200 focus:ring-4"
-                    onClick={handleLogin}
-                >
-                    Login
-                </Button>
+                <div className="text-end">
+                    <Button
+                        className="w-[140px] px-4 py-2 text-sm font-semibold "
+                        onClick={handleLogin}
+                    >
+                        Login
+                    </Button>
+                </div>
+                <div className="text-end">
+                    Don't have an account?{" "}
+                    <Link to="/register" className="font-bold text-linkText">
+                        Register Here
+                    </Link>
+                </div>
             </div>
         </div>
     );

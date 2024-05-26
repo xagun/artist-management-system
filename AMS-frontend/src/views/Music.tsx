@@ -1,6 +1,5 @@
 import { useStateContext } from "@/context/ContextProvider";
 import axiosInstance from "@/utils/AxiosInstance";
-import moment from "moment";
 import { useEffect, useState } from "react";
 import { DataTable } from "./components/DataTable";
 import {
@@ -14,13 +13,20 @@ import { ArrowLeft, ArrowUpDown, MoreVertical, SkipBack } from "lucide-react";
 import { ColumnDef } from "@tanstack/react-table";
 import DeleteDialog from "./components/DeleteDialog";
 import MusicForm from "./components/MusicForm";
+import { IArtist } from "@/types/types";
+import { toast } from "sonner";
 
 type IProps = {
     activeArtistId: string;
     handleMusicView: () => void;
+    activeArtist: IArtist;
 };
 
-export default function Music({ activeArtistId, handleMusicView }: IProps) {
+export default function Music({
+    activeArtistId,
+    handleMusicView,
+    activeArtist,
+}: IProps) {
     const [musicList, setMusicList] = useState<any[]>([]);
 
     const [deleteDialog, setDeleteDialog] = useState<boolean>(false);
@@ -97,16 +103,13 @@ export default function Music({ activeArtistId, handleMusicView }: IProps) {
 
     const getMusicByArtist = async () => {
         setFullSpinner(true);
-        // setUpdateAction(false);
         try {
             const res = await axiosInstance.get(
                 `/artist-music/${activeArtistId}`
             );
             if (res.status === 200 && res.data.success === true) {
                 setMusicList(res.data.data);
-                // handleMusicView();
                 setFullSpinner(false);
-                // setArtistUpdateReq({} as IArtist);
             }
         } catch (err) {
             console.log(err);
@@ -122,12 +125,13 @@ export default function Music({ activeArtistId, handleMusicView }: IProps) {
         try {
             const res = await axiosInstance.delete(`/music/delete/${id}`);
             if (res.status === 200 && res.data.success === true) {
+                toast(res.data.message);
                 setFullSpinner(false);
                 getMusicByArtist();
             }
-        } catch (err) {
+        } catch (err: any) {
             setFullSpinner(false);
-            console.log(err);
+            toast(err.response.data.message);
         }
     };
 
@@ -139,14 +143,15 @@ export default function Music({ activeArtistId, handleMusicView }: IProps) {
         <div className="">
             <h1>
                 Music by{" "}
-                <span className="text-xl font-bold">
-                    {musicList.length > 0 && musicList[0].artist_name}
+                <span className="text-xl font-bold text-primary">
+                    {activeArtist.name}
+                    {/* {musicList.length > 0 && musicList[0].artist_name} */}
                 </span>
             </h1>
             {updateAction ? (
                 <>
                     <ArrowLeft
-                        className="my-3 cursor-pointer"
+                        className="my-3 cursor-pointer text-primary hover:-translate-x-2 transition-transform"
                         onClick={() => {
                             setUpdateAction(false);
                         }}

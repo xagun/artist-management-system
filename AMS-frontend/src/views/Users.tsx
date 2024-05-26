@@ -22,17 +22,24 @@ import {
 
 import Register from "./Register";
 import DeleteDialog from "./components/DeleteDialog";
+import moment from "moment";
+import { toast } from "sonner";
 
 export default function Users() {
     const [allUsers, setAllUsers] = useState<IUser[]>([]);
     const [open, setOpen] = useState<boolean>(false);
+    const [updateAction, setUpdateAction] = useState<boolean>(false);
     const [deleteDialog, setDeleteDialog] = useState<boolean>(false);
     const [selectedEmailToDelete, setSelectedEmailToDelete] =
         useState<string>("");
 
+    const [updateReqData, setUpdateReqData] = useState<IUser>({} as IUser);
+
     const handleDialogOpen = () => {
         setOpen(!open);
-        getAllUsers();
+    };
+    const handleUpdateDialog = () => {
+        setUpdateAction(!updateAction);
     };
 
     const handleDeleteDialog = () => {
@@ -85,7 +92,14 @@ export default function Users() {
                             </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
-                            <DropdownMenuItem>Update</DropdownMenuItem>
+                            <DropdownMenuItem
+                                onClick={() => {
+                                    setUpdateAction(true);
+                                    setUpdateReqData(row.original);
+                                }}
+                            >
+                                Update
+                            </DropdownMenuItem>
 
                             <DropdownMenuItem
                                 onClick={() => {
@@ -111,11 +125,12 @@ export default function Users() {
         try {
             const res = await axiosInstance.post("/user/delete", param);
             if (res.status === 200 && res.data.success === true) {
+                toast(res.data.message);
                 setSelectedEmailToDelete("");
                 getAllUsers();
             }
-        } catch (err) {
-            console.log(err);
+        } catch (err: any) {
+            toast(err.response.data.message);
         }
     };
 
@@ -123,10 +138,14 @@ export default function Users() {
         try {
             const res = await axiosInstance.get("/users");
             if (res.status === 200 && res.data.success === true) {
-                setAllUsers(res.data.data);
+                const usersData = res.data.data;
+                usersData.forEach((user: IUser) => {
+                    user.dob = moment(new Date(user.dob)).format("LL");
+                });
+                setAllUsers(usersData);
             }
-        } catch (err) {
-            console.log(err);
+        } catch (err: any) {
+            toast(err.response.data.message);
         }
     };
 
@@ -136,19 +155,20 @@ export default function Users() {
 
     return (
         <div>
-            <div className="flex justify-between items-center mb-5">
-                <h1 className="font-bold text-xl">Users</h1>
+            <div className="flex justify-between items-center">
                 <Dialog open={open} onOpenChange={handleDialogOpen}>
                     <DialogTrigger>
                         <Button>Add User</Button>
                     </DialogTrigger>
                     <DialogContent className="bg-white">
                         <DialogHeader>
-                            <DialogTitle>Add User</DialogTitle>
+                            <DialogTitle>Add user</DialogTitle>
                             <DialogDescription>
                                 <Register
                                     addUser={true}
                                     handleCloseUserDialog={handleDialogOpen}
+                                    updateAction={updateAction}
+                                    getAllUsers={getAllUsers}
                                 />
                             </DialogDescription>
                         </DialogHeader>
@@ -168,6 +188,23 @@ export default function Users() {
                 onDelete={deleteUser}
                 itemToDelete={selectedEmailToDelete}
             />
+
+            {/* //Update User  */}
+            <Dialog open={updateAction} onOpenChange={handleUpdateDialog}>
+                <DialogContent className="bg-white">
+                    <DialogHeader>
+                        <DialogTitle>Update user</DialogTitle>
+                        <DialogDescription>
+                            <Register
+                                addUser={false}
+                                handleCloseUserDialog={handleUpdateDialog}
+                                updateAction={updateAction}
+                                updateReqData={updateReqData}
+                            />
+                        </DialogDescription>
+                    </DialogHeader>
+                </DialogContent>
+            </Dialog>
         </div>
     );
 }

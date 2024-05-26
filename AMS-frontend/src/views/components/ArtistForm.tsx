@@ -5,6 +5,7 @@ import { IArtist } from "@/types/types";
 import axiosInstance from "@/utils/AxiosInstance";
 import { useEffect, useState } from "react";
 import moment from "moment";
+import { toast } from "sonner";
 
 type IProps = {
     updateAction: boolean;
@@ -27,9 +28,6 @@ const ArtistForm = ({
 
     const { setFullSpinner } = useStateContext();
 
-    const inputClass =
-        "px-4 py-2 transition duration-300 border border-gray-300 rounded-md focus:border-transparent focus:outline-none focus:ring-4 focus:ring-blue-200";
-
     const errorClass = "border-red-300";
 
     const handleAddArtist = async () => {
@@ -45,10 +43,12 @@ const ArtistForm = ({
         try {
             const res = await axiosInstance.post("/artist", params);
             if (res.status === 200 && res.data.success === true) {
+                toast(res.data.message);
                 handleDialog();
                 setFullSpinner(false);
             }
-        } catch (err) {
+        } catch (err: any) {
+            toast(err.response.data.message);
             setError(true);
             setFullSpinner(false);
             console.log(err);
@@ -83,12 +83,13 @@ const ArtistForm = ({
 
     useEffect(() => {
         if (artistUpdateReq && updateAction) {
-            debugger;
             setName(artistUpdateReq.name);
             setGender(artistUpdateReq.gender);
             setAddress(artistUpdateReq.address);
             setFirstRelease(artistUpdateReq.first_release_year);
-            setAlbumsReleased(artistUpdateReq.no_of_albums_released.toString());
+            setAlbumsReleased(
+                artistUpdateReq.no_of_albums_released?.toString()
+            );
 
             let newD = moment(artistUpdateReq.dob, "MMMM D, YYYY").format(
                 "YYYY-MM-DD"
@@ -116,7 +117,7 @@ const ArtistForm = ({
                             onChange={(e) => setName(e.target.value)}
                             autoFocus
                             className={cn(
-                                inputClass,
+                                "inputClass",
                                 error && name === "" && errorClass
                             )}
                         />
@@ -139,7 +140,7 @@ const ArtistForm = ({
                             value={dob}
                             onChange={(e) => setDob(e.target.value)}
                             className={cn(
-                                inputClass,
+                                "inputClass",
                                 error && dob === "" && errorClass
                             )}
                         />
@@ -158,7 +159,7 @@ const ArtistForm = ({
                             value={gender}
                             onChange={(e) => setGender(e.target.value)}
                             className={cn(
-                                inputClass,
+                                "inputClass",
                                 error && gender === "" && errorClass
                             )}
                         >
@@ -191,7 +192,7 @@ const ArtistForm = ({
                             value={firstRelease}
                             onChange={(e) => setFirstRelease(e.target.value)}
                             className={cn(
-                                inputClass,
+                                "inputClass",
                                 error && firstRelease === "" && errorClass
                             )}
                         />
@@ -213,7 +214,7 @@ const ArtistForm = ({
                             id="albumsReleased"
                             value={albumsReleased}
                             onChange={(e) => setAlbumsReleased(e.target.value)}
-                            className={cn(inputClass)}
+                            className={cn("inputClass")}
                         />
                     </div>
                 </div>
@@ -231,13 +232,13 @@ const ArtistForm = ({
                         id="address"
                         value={address}
                         onChange={(e) => setAddress(e.target.value)}
-                        className={inputClass}
+                        className={"inputClass"}
                     />
                 </div>
 
                 <div className="text-end">
                     <Button
-                        className="w-[140px] px-4 py-2 text-sm font-semibold text-white transition-colors duration-300 bg-blue-500 rounded-md shadow hover:bg-blue-600 focus:outline-none focus:ring-blue-200 focus:ring-4"
+                        className="w-[140px] px-4 py-2"
                         onClick={
                             updateAction ? handleUpdateArtist : handleAddArtist
                         }

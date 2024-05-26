@@ -1,15 +1,30 @@
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { IUser } from "@/types/types";
 import axiosInstance from "@/utils/AxiosInstance";
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import moment from "moment";
+import { toast } from "sonner";
+import { useStateContext } from "@/context/ContextProvider";
 
 type IProps = {
-    addUser: boolean;
-    handleCloseUserDialog: () => void;
+    addUser?: boolean;
+    handleCloseUserDialog?: () => void;
+    updateAction?: boolean;
+    updateReqData?: IUser;
+    getAllUsers?: () => void;
+    profileUpdate?: boolean;
 };
 
-const Register = ({ addUser, handleCloseUserDialog }: IProps) => {
+const Register = ({
+    addUser,
+    handleCloseUserDialog,
+    updateAction,
+    updateReqData,
+    getAllUsers,
+    profileUpdate,
+}: IProps) => {
     const [email, setEmail] = useState<string>("");
     const [password, setPassword] = useState<string>("");
     const [firstName, setFirstName] = useState<string>("");
@@ -20,6 +35,8 @@ const Register = ({ addUser, handleCloseUserDialog }: IProps) => {
     const [dob, setDob] = useState<string>("");
     const [cPassword, setCPassword] = useState<string>("");
     const [error, setError] = useState<boolean>(false);
+
+    const { setUser } = useStateContext();
     const navigate = useNavigate();
 
     const handleRegister = async () => {
@@ -37,23 +54,81 @@ const Register = ({ addUser, handleCloseUserDialog }: IProps) => {
         try {
             const res = await axiosInstance.post("/register", params);
             if (res.status === 200 && res.data.success === true) {
-                addUser ? handleCloseUserDialog() : navigate("/login");
+                toast(res.data.message);
+                addUser && getAllUsers?.();
+                addUser ? handleCloseUserDialog?.() : navigate("/login");
             }
-        } catch (err) {
+        } catch (err: any) {
+            toast(err.response.data.message);
             setError(true);
             console.log(err);
         }
     };
 
-    const inputClass =
-        "px-4 py-2 transition duration-300 border border-gray-300 rounded-md focus:border-transparent focus:outline-none focus:ring-4 focus:ring-blue-200";
+    const updateUser = async () => {
+        const params = {
+            first_name: firstName,
+            last_name: lastName,
+            dob: dob,
+            gender: gender,
+            address: address,
+            phone: phone,
+            email: email,
+        };
+        try {
+            const res = await axiosInstance.post(
+                `/user/update/${updateReqData?.id}`,
+                params
+            );
+            if (res.status === 200 && res.data.success === true) {
+                toast(res.data.message);
+                profileUpdate
+                    ? setUser({
+                          ...params,
+                          dob: moment(dob).format("YYYY-MM-DD HH:mm:ss"),
+                          id: updateReqData?.id,
+                      })
+                    : getAllUsers?.();
+                handleCloseUserDialog?.();
+            }
+        } catch (err: any) {
+            setError(true);
+            toast(err.response.data.message);
+        }
+    };
+
+    useEffect(() => {
+        if (updateReqData) {
+            setFirstName(updateReqData.first_name);
+            setLastName(updateReqData.last_name);
+            setAddress(updateReqData.address);
+            setPhone(updateReqData.phone);
+            setEmail(updateReqData.email);
+            setGender(updateReqData.gender);
+            const newD = moment(updateReqData.dob).format("YYYY-MM-DD");
+            setDob(newD);
+        }
+    }, [updateReqData]);
 
     const errorClass = "border-red-300";
 
     return (
         <div className="w-full">
             <h3 className="my-4 text-2xl font-semibold text-gray-700">
-                {!addUser && "Account Registration"}
+                {!addUser && !updateAction && (
+                    <div>
+                        <h1 className="mb-3">Create new Account</h1>
+                        <span className="text-sm">
+                            Already have an account
+                        </span>{" "}
+                        <Link
+                            to="/login"
+                            className="font-bold text-lg text-linkText"
+                        >
+                            Login Here
+                        </Link>
+                    </div>
+                )}
             </h3>
             <div className="flex flex-col space-y-3">
                 <div className="flex gap-4 max-sm:flex-col">
@@ -72,7 +147,7 @@ const Register = ({ addUser, handleCloseUserDialog }: IProps) => {
                             onChange={(e) => setFirstName(e.target.value)}
                             autoFocus
                             className={cn(
-                                inputClass,
+                                "inputClass",
                                 error && firstName === "" && errorClass
                             )}
                         />
@@ -91,7 +166,7 @@ const Register = ({ addUser, handleCloseUserDialog }: IProps) => {
                             value={lastName}
                             onChange={(e) => setLastName(e.target.value)}
                             className={cn(
-                                inputClass,
+                                "inputClass",
                                 error && lastName === "" && errorClass
                             )}
                         />
@@ -114,7 +189,7 @@ const Register = ({ addUser, handleCloseUserDialog }: IProps) => {
                             value={dob}
                             onChange={(e) => setDob(e.target.value)}
                             className={cn(
-                                inputClass,
+                                "inputClass",
                                 error && dob === "" && errorClass
                             )}
                         />
@@ -133,7 +208,7 @@ const Register = ({ addUser, handleCloseUserDialog }: IProps) => {
                             value={gender}
                             onChange={(e) => setGender(e.target.value)}
                             className={cn(
-                                inputClass,
+                                "inputClass",
                                 error && gender === "" && errorClass
                             )}
                         >
@@ -163,7 +238,7 @@ const Register = ({ addUser, handleCloseUserDialog }: IProps) => {
                             id="address"
                             value={address}
                             onChange={(e) => setAddress(e.target.value)}
-                            className={inputClass}
+                            className={cn("inputClass")}
                         />
                     </div>
                     <div className="flex flex-col space-y-1 w-full">
@@ -182,7 +257,7 @@ const Register = ({ addUser, handleCloseUserDialog }: IProps) => {
                             value={phone}
                             onChange={(e) => setPhone(e.target.value)}
                             className={cn(
-                                inputClass,
+                                "inputClass",
                                 error && phone === "" && errorClass
                             )}
                         />
@@ -203,60 +278,68 @@ const Register = ({ addUser, handleCloseUserDialog }: IProps) => {
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         className={cn(
-                            inputClass,
+                            "inputClass",
                             error && email === "" && errorClass
                         )}
                     />
                 </div>
-                <div className="flex flex-col space-y-1">
-                    <div className="flex items-center justify-between">
-                        <label
-                            htmlFor="password"
-                            className="text-sm font-semibold text-gray-500"
-                        >
-                            Password
-                        </label>
+                {!updateAction && (
+                    <div className="flex flex-col space-y-1">
+                        <div className="flex items-center justify-between">
+                            <label
+                                htmlFor="password"
+                                className="text-sm font-semibold text-gray-500"
+                            >
+                                Password
+                            </label>
+                        </div>
+                        <input
+                            placeholder="Enter password"
+                            type="password"
+                            id="password"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            className={cn(
+                                "inputClass",
+                                error && password === "" && errorClass
+                            )}
+                        />
                     </div>
-                    <input
-                        placeholder="Enter password"
-                        type="password"
-                        id="password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        className={cn(
-                            inputClass,
-                            error && password === "" && errorClass
-                        )}
-                    />
-                </div>
-                <div className="flex flex-col space-y-1">
-                    <div className="flex items-center justify-between">
-                        <label
-                            htmlFor="password"
-                            className="text-sm font-semibold text-gray-500"
-                        >
-                            Confirm Password
-                        </label>
+                )}
+                {!updateAction && (
+                    <div className="flex flex-col space-y-1">
+                        <div className="flex items-center justify-between">
+                            <label
+                                htmlFor="password"
+                                className="text-sm font-semibold text-gray-500"
+                            >
+                                Confirm Password
+                            </label>
+                        </div>
+                        <input
+                            placeholder="Enter password"
+                            type="password"
+                            id="cPassword"
+                            value={cPassword}
+                            onChange={(e) => setCPassword(e.target.value)}
+                            className={cn(
+                                "inputClass",
+                                error && cPassword === "" && errorClass
+                            )}
+                        />
                     </div>
-                    <input
-                        placeholder="Enter password"
-                        type="password"
-                        id="cPassword"
-                        value={cPassword}
-                        onChange={(e) => setCPassword(e.target.value)}
-                        className={cn(
-                            inputClass,
-                            error && cPassword === "" && errorClass
-                        )}
-                    />
-                </div>
+                )}
 
                 <div className="text-end">
                     <Button
-                        className="w-[140px] px-4 py-2 text-sm font-semibold text-white transition-colors duration-300 bg-blue-500 rounded-md shadow hover:bg-blue-600 focus:outline-none focus:ring-blue-200 focus:ring-4"
-                        onClick={handleRegister}
+                        className="w-[140px] px-4 py-2 text-sm"
+                        onClick={updateAction ? updateUser : handleRegister}
                     >
-                        {addUser ? "Add User" : "Register"}
+                        {addUser
+                            ? "Add User"
+                            : updateAction
+                            ? "Update"
+                            : "Register"}
                     </Button>
                 </div>
             </div>

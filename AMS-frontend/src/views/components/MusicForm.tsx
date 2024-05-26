@@ -3,6 +3,7 @@ import { useStateContext } from "@/context/ContextProvider";
 import { cn } from "@/lib/utils";
 import axiosInstance from "@/utils/AxiosInstance";
 import React, { useEffect, useState } from "react";
+import { toast } from "sonner";
 
 type IProps = {
     updateAction: boolean;
@@ -21,10 +22,7 @@ const MusicForm = ({
     const [genre, setGenre] = useState<string>("");
     const [error, setError] = useState<boolean>(false);
 
-    const inputClass =
-        "px-4 py-2 transition duration-300 border border-gray-300 rounded-md focus:border-transparent focus:outline-none focus:ring-4 focus:ring-blue-200";
-
-    const errorClass = "border-red-300";
+    const errorClass = "border-red-500";
 
     const { setFullSpinner } = useStateContext();
 
@@ -40,10 +38,12 @@ const MusicForm = ({
         try {
             const res = await axiosInstance.post("/music", params);
             if (res.status === 200 && res.data.success === true) {
+                toast(res.data.message);
                 handleMusicDialog();
                 setFullSpinner(false);
             }
-        } catch (err) {
+        } catch (err: any) {
+            toast(err.response.data.message);
             setError(true);
             setFullSpinner(false);
             console.log(err);
@@ -73,19 +73,42 @@ const MusicForm = ({
                 params
             );
             if (res.status === 200 && res.data.success === true) {
+                toast(res.data.message);
                 handleMusicDialog();
                 setFullSpinner(false);
             }
-        } catch (err) {
+        } catch (err: any) {
+            toast(err.response.data.message);
             setError(true);
             setFullSpinner(false);
-            console.log(err);
         }
     };
 
     return (
         <div className="w-full">
             <div className="flex flex-col space-y-3">
+                <div className="flex gap-4 max-sm:flex-col">
+                    <div className="flex flex-col space-y-1 w-full">
+                        <label
+                            htmlFor="title"
+                            className="text-sm font-semibold text-gray-500"
+                        >
+                            Title
+                        </label>
+                        <input
+                            placeholder="Enter music title"
+                            type="text"
+                            id="title"
+                            value={title}
+                            onChange={(e) => setTitle(e.target.value)}
+                            className={cn(
+                                "inputClass",
+                                error && title === "" && errorClass
+                            )}
+                            autoFocus
+                        />
+                    </div>
+                </div>
                 <div className="flex gap-4 max-sm:flex-col">
                     <div className="flex flex-col space-y-1 w-full">
                         <label
@@ -100,9 +123,8 @@ const MusicForm = ({
                             id="albumName"
                             value={albumName}
                             onChange={(e) => setAlbumName(e.target.value)}
-                            autoFocus
                             className={cn(
-                                inputClass,
+                                "inputClass",
                                 error && albumName === "" && errorClass
                             )}
                         />
@@ -122,7 +144,7 @@ const MusicForm = ({
                             value={genre}
                             onChange={(e) => setGenre(e.target.value)}
                             className={cn(
-                                inputClass,
+                                "inputClass",
                                 error && genre === "" && errorClass
                             )}
                         >
@@ -137,31 +159,10 @@ const MusicForm = ({
                         </select>
                     </div>
                 </div>
-                <div className="flex gap-4 max-sm:flex-col">
-                    <div className="flex flex-col space-y-1 w-full">
-                        <label
-                            htmlFor="title"
-                            className="text-sm font-semibold text-gray-500"
-                        >
-                            Title
-                        </label>
-                        <input
-                            placeholder="Enter music title"
-                            type="text"
-                            id="title"
-                            value={title}
-                            onChange={(e) => setTitle(e.target.value)}
-                            className={cn(
-                                inputClass,
-                                error && title === "" && errorClass
-                            )}
-                        />
-                    </div>
-                </div>
 
                 <div className="text-end">
                     <Button
-                        className="w-[140px] px-4 py-2 text-sm font-semibold text-white transition-colors duration-300 bg-blue-500 rounded-md shadow hover:bg-blue-600 focus:outline-none focus:ring-blue-200 focus:ring-4"
+                        className="w-[140px] px-4 py-2"
                         onClick={
                             updateAction ? handleUpdateMusic : handleAddSong
                         }

@@ -28,6 +28,8 @@ import Music from "./Music";
 
 export default function Artists() {
     const [allArtists, setAllArtists] = useState<IArtist[]>([]);
+    const [activeArtist, setActiveArtist] = useState<IArtist>({} as IArtist);
+
     const [artistToDelete, setArtistToDelete] = useState<number>();
     const [artistUpdateReq, setArtistUpdateReq] = useState<IArtist>(
         {} as IArtist
@@ -97,6 +99,7 @@ export default function Artists() {
                             className="h-[30px] text-xs"
                             onClick={() => {
                                 setActiveArtistId(row.original.id);
+                                setActiveArtist(row.original);
                                 handleMusicView();
                             }}
                         >
@@ -200,7 +203,6 @@ export default function Artists() {
     return (
         <div>
             <div className="flex justify-between">
-                <h1>Artists</h1>
                 <Dialog open={open} onOpenChange={handleArtistDialog}>
                     <DialogTrigger>
                         <Button>Add Artist</Button>
@@ -208,7 +210,7 @@ export default function Artists() {
                     <DialogContent className="bg-white">
                         <DialogHeader>
                             <DialogTitle className="mb-4">
-                                Add artist
+                                {updateAction ? "Update Artist" : "Add artist"}
                             </DialogTitle>
                             <DialogDescription>
                                 <ArtistForm
@@ -259,6 +261,7 @@ export default function Artists() {
                             <Music
                                 activeArtistId={activeArtistId}
                                 handleMusicView={handleMusicView}
+                                activeArtist={activeArtist}
                             />
                         </DialogDescription>
                     </DialogHeader>
