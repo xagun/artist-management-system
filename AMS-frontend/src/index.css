@@ -1,0 +1,93 @@
+@import url("https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+    :root {
+        --white-bg: #ffffff;
+        --sky-blue: #4694ff;
+
+        --background: var(white-bg);
+        --foreground: #222222;
+
+        --card: #ffffff;
+        --card-foreground: #222222;
+
+        --popover: #ffffff;
+        --popover-foreground: #222222;
+
+        --primary: #1a1a1a;
+        --primary-foreground: #e0e0e0;
+
+        --secondary: #f0f0f0;
+        --secondary-foreground: #1a1a1a;
+
+        --muted: #f0f0f0;
+        --muted-foreground: #6e6e6e;
+
+        --accent: #f0f0f0;
+        --accent-foreground: #1a1a1a;
+
+        --destructive: #ff4d4d;
+        --destructive-foreground: #e0e0e0;
+
+        --border: #d6d6d6;
+        --input: #d6d6d6;
+        --ring: #222222;
+
+        --radius: 0.5rem;
+    }
+
+    .dark {
+        --mycolor: #000000;
+        --background: var(--mycolor);
+        --foreground: #e0e0e0;
+
+        --card: #222222;
+        --card-foreground: #e0e0e0;
+
+        --popover: #222222;
+        --popover-foreground: #e0e0e0;
+
+        --primary: #e0e0e0;
+        --primary-foreground: #1a1a1a;
+
+        --secondary: #2b2b2b;
+        --secondary-foreground: #e0e0e0;
+
+        --muted: #2b2b2b;
+        --muted-foreground: #6e6e6e;
+
+        --accent: #2b2b2b;
+        --accent-foreground: #e0e0e0;
+
+        --destructive: #cc3333;
+        --destructive-foreground: #e0e0e0;
+
+        --border: #2b2b2b;
+        --input: #2b2b2b;
+        --ring: #d6d6d6;
+    }
+}
+
+@layer base {
+    * {
+        @apply border-border;
+    }
+    body {
+        @apply bg-background text-foreground;
+    }
+}
+
+@layer components {
+
+    .inputClass {
+        @apply px-4 py-2 transition duration-300 border border-gray-300 rounded-[18px] h-9 focus:border-transparent focus:outline-none focus:ring-4 focus:ring-blue-200 disabled:bg-gray-100;
+    }
+
+    .inputErrorClass {
+        @apply border-red-500;
+    }
+}

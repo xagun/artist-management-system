@@ -77,10 +77,13 @@ class UserService
      */
     public function getAllUser(): array
     {
-        $allUsers = DB::select("SELECT id, first_name, last_name, email, phone, dob, gender, address
-        FROM users;");
+        $allUsers = DB::select("SELECT
+            CONCAT(first_name, ' ', last_name) as full_name,
+            id, first_name, last_name, email, phone, dob, gender, address
+            FROM users;");
         return $allUsers;
     }
+
 
     /**
      * Update user data
@@ -96,8 +99,6 @@ class UserService
             "UPDATE users
          SET first_name = ?,
              last_name = ?,
-             email = ?,
-             password = ?,
              gender = ?,
              dob = ?,
              phone = ?,
@@ -107,8 +108,6 @@ class UserService
             [
                 $data['first_name'],
                 $data['last_name'],
-                $data['email'],
-                Hash::make($data['password']),
                 $data['gender'],
                 $data['dob'],
                 $data['phone'],
@@ -117,5 +116,19 @@ class UserService
                 $userId
             ]
         );
+    }
+
+    /**
+     * Update Password
+     *
+     * @param string $data
+     * @param int $id
+     *
+     * @return bool
+     */
+    public function updatePassword(string $data, int $id): bool
+    {
+        $password = Hash::make($data);
+        return DB::update("UPDATE users SET password = ?, updated_at = ? where id = $id", [$password, now()]);
     }
 }
