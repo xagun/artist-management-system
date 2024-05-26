@@ -31,7 +31,6 @@ export default function Login() {
             }
         } catch (err: any) {
             toast(err.response.data.message);
-            console.log(err.response.message);
             setFullSpinner(false);
             setError(true);
         }

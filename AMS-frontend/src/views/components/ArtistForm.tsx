@@ -51,7 +51,6 @@ const ArtistForm = ({
             toast(err.response.data.message);
             setError(true);
             setFullSpinner(false);
-            console.log(err);
         }
     };
 

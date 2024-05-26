@@ -28,7 +28,6 @@ export default function DashboardLayout() {
             }
         } catch (err) {
             setFullSpinner(false);
-            console.log(err);
         }
     };
 

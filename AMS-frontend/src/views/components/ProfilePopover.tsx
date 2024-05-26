@@ -78,7 +78,6 @@ const ProfilePopover = () => {
             toast(err.response.data.message);
             setError(true);
             setFullSpinner(false);
-            console.log(err);
         }
     };
     const handleLogout = async () => {
@@ -93,7 +92,6 @@ const ProfilePopover = () => {
             }
         } catch (err) {
             setFullSpinner(false);
-            console.log(err);
         }
     };
 
