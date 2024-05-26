@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { useStateContext } from "@/context/ContextProvider";
+import { cn } from "@/lib/utils";
 import axiosInstance from "@/utils/AxiosInstance";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
@@ -9,6 +10,7 @@ export default function Login() {
     const [email, setEmail] = useState<string>("");
     const [password, setPassword] = useState<string>("");
     const [error, setError] = useState<boolean>(false);
+    const [errorObj, setErrorObj] = useState<any>({});
 
     const navigate = useNavigate();
 
@@ -30,7 +32,9 @@ export default function Login() {
                 toast.success(res.data.message);
             }
         } catch (err: any) {
-            toast.error(err.response.data.message);
+            // toast.error(err.response.data.message);
+            setErrorObj(err.response.data.errors);
+
             setFullSpinner(false);
             setError(true);
         }
@@ -60,8 +64,22 @@ export default function Login() {
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         autoFocus
-                        className="inputClass"
+                        className={cn(
+                            "inputClass",
+                            (error && email === "") ||
+                                (errorObj &&
+                                    errorObj.email &&
+                                    "inputErrorClass")
+                        )}
                     />
+                    {error && email === "" && (
+                        <span className="text-red-500 text-[10px]">
+                            Email is required
+                        </span>
+                    )}
+                    <span className="text-red-500 text-[10px]">
+                        {errorObj?.email}
+                    </span>
                 </div>
                 <div className="flex flex-col space-y-1">
                     <div className="flex items-center justify-between">
@@ -77,8 +95,22 @@ export default function Login() {
                         id="password"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
-                        className="inputClass"
+                        className={cn(
+                            "inputClass",
+                            (error && password === "") ||
+                                (errorObj &&
+                                    errorObj.password &&
+                                    "inputErrorClass")
+                        )}
                     />
+                    {error && password === "" && (
+                        <span className="text-red-500 text-[10px]">
+                            Password is required
+                        </span>
+                    )}
+                    <span className="text-red-500 text-[10px]">
+                        {errorObj?.password}
+                    </span>
                 </div>
                 <div className="text-end">
                     <Button
