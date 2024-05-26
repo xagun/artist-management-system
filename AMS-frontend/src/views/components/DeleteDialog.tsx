@@ -23,12 +23,12 @@ const DeleteDialog = ({
 }: IProps) => {
     return (
         <AlertDialog open={open} onOpenChange={handleOnChange}>
-            <AlertDialogContent className="bg-white">
+            <AlertDialogContent className="bg-white !rounded-[20px] ">
                 <AlertDialogHeader>
                     <AlertDialogTitle>Are you sure?</AlertDialogTitle>
                     <AlertDialogDescription>
                         This action cannot be undone. This will permanently
-                        delete data.
+                        delete your data.
                     </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
