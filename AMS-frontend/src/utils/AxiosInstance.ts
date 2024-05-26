@@ -1,11 +1,12 @@
-import axios from 'axios';
 
+import axios, { AxiosError } from 'axios';
+import { redirect } from 'react-router-dom';
 
 const axiosInstance = axios.create({
-  baseURL: 'http://localhost:80/api',
+  baseURL: import.meta.env.VITE_API_BASE_URL,
   headers: {
     'Content-Type': 'application/json',
-    'Accept':'application/json'
+    'Accept': 'application/json'
   },
 });
 
@@ -13,10 +14,10 @@ const axiosInstance = axios.create({
 axiosInstance.interceptors.request.use(
   (config) => {
     // Modify request config before sending
-const ACCESS_TOKEN = localStorage.getItem("ACCESS_TOKEN")
-if(ACCESS_TOKEN){
-    config.headers.Authorization = `Bearer ${ACCESS_TOKEN}`;
-}
+    const ACCESS_TOKEN = localStorage.getItem("ACCESS_TOKEN");
+    if (ACCESS_TOKEN) {
+      config.headers.Authorization = `Bearer ${ACCESS_TOKEN}`;
+    }
     return config;
   },
   (error) => {
@@ -29,15 +30,30 @@ if(ACCESS_TOKEN){
 axiosInstance.interceptors.response.use(
   (response) => {
     // Handle successful response
-    return response
-
+    return response;
   },
   (error) => {
     // Handle response error
-    if (error.response.status === 401) {
-      // Handle unauthorized error
-      // e.g., redirect to login page
+    if (axios.isAxiosError(error)) {
+      const customError = error as AxiosError;
+
+      if (customError.response) {
+        if (customError.response.status === 401) {
+          localStorage.clear();
+          redirect("/");
+        } else {
+          // Log or handle other specific errors
+          console.error('Response error:', customError.response);
+        }
+      } else {
+        // Handle generic errors
+        console.error('Error:', customError.message);
+      }
+    } else {
+      // Handle unknown errors
+      console.error('An unknown error occurred:', error);
     }
+
     return Promise.reject(error);
   }
 );
