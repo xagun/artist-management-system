@@ -251,9 +251,7 @@ class UserController extends Controller
         ]);
 
         try {
-
             $user = Auth::user();
-
             if (!Hash::check($validatedData['old_password'], $user['password'])) {
                 return response()->json([
                     'success' => false,

@@ -107,7 +107,7 @@ const ArtistForm = ({
                             htmlFor="name"
                             className="text-sm font-semibold text-gray-500"
                         >
-                            Name
+                            Name <span className="text-red-500"> *</span>
                         </label>
                         <input
                             placeholder="Enter first name"
@@ -132,6 +132,7 @@ const ArtistForm = ({
                                 className="text-sm font-semibold text-gray-500"
                             >
                                 Date of birth
+                                <span className="text-red-500"> *</span>
                             </label>
                         </div>
                         <input
@@ -152,7 +153,7 @@ const ArtistForm = ({
                                 htmlFor="gender"
                                 className="text-sm font-semibold text-gray-500"
                             >
-                                Gender
+                                Gender<span className="text-red-500"> *</span>
                             </label>
                         </div>
                         <select
@@ -182,6 +183,7 @@ const ArtistForm = ({
                                 className="text-sm font-semibold text-gray-500"
                             >
                                 First release year
+                                <span className="text-red-500"> *</span>
                             </label>
                         </div>
                         <input

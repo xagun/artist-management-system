@@ -147,7 +147,7 @@ const Register = ({
                             htmlFor="firstName"
                             className="text-sm font-semibold text-gray-500"
                         >
-                            First Name
+                            First Name <span className="text-red-500"> *</span>
                         </label>
                         <input
                             placeholder="Enter first name"
@@ -167,7 +167,7 @@ const Register = ({
                             htmlFor="firstName"
                             className="text-sm font-semibold text-gray-500"
                         >
-                            Last Name
+                            Last Name <span className="text-red-500"> *</span>
                         </label>
                         <input
                             placeholder="Enter last name"
@@ -190,7 +190,8 @@ const Register = ({
                                 htmlFor="dob"
                                 className="text-sm font-semibold text-gray-500"
                             >
-                                Date of birth
+                                Date of birth{" "}
+                                <span className="text-red-500"> *</span>
                             </label>
                         </div>
                         <input
@@ -210,7 +211,7 @@ const Register = ({
                                 htmlFor="gender"
                                 className="text-sm font-semibold text-gray-500"
                             >
-                                Gender
+                                Gender <span className="text-red-500"> *</span>
                             </label>
                         </div>
                         <select
@@ -257,7 +258,8 @@ const Register = ({
                                 htmlFor="phone"
                                 className="text-sm font-semibold text-gray-500"
                             >
-                                Phone no.
+                                Phone no.{" "}
+                                <span className="text-red-500"> *</span>
                             </label>
                         </div>
                         <input
@@ -279,7 +281,7 @@ const Register = ({
                         htmlFor="email"
                         className="text-sm font-semibold text-gray-500"
                     >
-                        Email address
+                        Email address <span className="text-red-500"> *</span>
                     </label>
                     <input
                         placeholder="Enter your email address"
@@ -301,7 +303,8 @@ const Register = ({
                                 htmlFor="password"
                                 className="text-sm font-semibold text-gray-500"
                             >
-                                Password
+                                Password{" "}
+                                <span className="text-red-500"> *</span>
                             </label>
                         </div>
                         <input
@@ -324,7 +327,8 @@ const Register = ({
                                 htmlFor="password"
                                 className="text-sm font-semibold text-gray-500"
                             >
-                                Confirm Password
+                                Confirm Password{" "}
+                                <span className="text-red-500"> *</span>
                             </label>
                         </div>
                         <input

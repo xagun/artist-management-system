@@ -90,7 +90,7 @@ const MusicForm = ({
                             htmlFor="title"
                             className="text-sm font-semibold text-gray-500"
                         >
-                            Title
+                            Title <span className="text-red-500"> *</span>
                         </label>
                         <input
                             placeholder="Enter music title"
@@ -112,7 +112,7 @@ const MusicForm = ({
                             htmlFor="name"
                             className="text-sm font-semibold text-gray-500"
                         >
-                            Album name
+                            Album name <span className="text-red-500"> *</span>
                         </label>
                         <input
                             placeholder="Enter album name"
@@ -134,7 +134,7 @@ const MusicForm = ({
                             htmlFor="genre"
                             className="text-sm font-semibold text-gray-500"
                         >
-                            Genre
+                            Genre <span className="text-red-500"> *</span>
                         </label>
                         <select
                             id="genre"
