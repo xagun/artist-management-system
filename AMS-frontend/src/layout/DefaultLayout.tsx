@@ -24,7 +24,7 @@ export default function DefaultLayout() {
       <div className="flex flex-col overflow-hidden rounded-[30px] shadow-lg max md:flex-row md:flex-1 lg:max-w-[1024px]">
         <div className="p-4 py-6 bg-black bg-opacity-80 text-white md:w-96 md:flex-shrink-0 md:flex md:flex-col items-center justify-center gap-4">
           <div className="my-3 flex justify-center">
-            <img src="ams-logo.png" className="h-48" />
+            <img src="ams-logo.png" className="h-32 sm:h-48 " />
             {/* <span>AMS</span>
             <div className="text-xs">Artist Management System</div> */}
           </div>

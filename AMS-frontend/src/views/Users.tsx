@@ -215,6 +215,7 @@ export default function Users() {
                                 handleCloseUserDialog={handleUpdateDialog}
                                 updateAction={updateAction}
                                 updateReqData={updateReqData}
+                                getAllUsers={getAllUsers}
                             />
                         </DialogDescription>
                     </DialogHeader>

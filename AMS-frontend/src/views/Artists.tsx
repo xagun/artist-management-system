@@ -44,6 +44,17 @@ export default function Artists() {
 
     const { setFullSpinner } = useStateContext();
 
+    const getMusicByArtist = async (userId: number) => {
+        try {
+            const res = await axiosInstance.get(`/artist-music/${userId}`);
+            if (res.status === 200 && res.data.success === true) {
+                return res.data.data.length;
+            }
+        } catch (err) {
+            console.log(err);
+        }
+    };
+
     const columns: ColumnDef<any>[] = [
         {
             accessorKey: "name",
@@ -80,6 +91,10 @@ export default function Artists() {
         {
             accessorKey: "no_of_albums_released",
             header: "Albums released",
+        },
+        {
+            header: "Count",
+            accessorKey: "count",
         },
         {
             header: "Songs",
@@ -158,7 +173,18 @@ export default function Artists() {
                 artistsData.forEach((artist: IArtist) => {
                     artist.dob = moment(new Date(artist.dob)).format("LL");
                 });
-                setAllArtists(res.data.data);
+
+                const artists = res.data.data;
+
+                const artistPromises = artists.map(async (artist: any) => {
+                    const count = await getMusicByArtist(artist.id);
+                    artist.count = count;
+                    return artist;
+                });
+
+                const artistsWithCounts = await Promise.all(artistPromises);
+
+                setAllArtists(artistsWithCounts);
                 setArtistUpdateReq({} as IArtist);
                 setFullSpinner(false);
             }

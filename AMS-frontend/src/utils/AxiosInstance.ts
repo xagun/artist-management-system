@@ -41,7 +41,8 @@ axiosInstance.interceptors.response.use(
       if (customError.response) {
         if (customError.response.status === 401) {
           localStorage.clear();
-          redirect("/");
+          window.location.href = '/';
+
         }
         else if(customError.response.status !== 422){
             // @ts-ignore

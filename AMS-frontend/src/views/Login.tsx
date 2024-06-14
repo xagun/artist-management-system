@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { useStateContext } from "@/context/ContextProvider";
 import { cn } from "@/lib/utils";
 import axiosInstance from "@/utils/AxiosInstance";
+import { Eye, EyeOff } from "lucide-react";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
@@ -10,6 +11,7 @@ export default function Login() {
     const [email, setEmail] = useState<string>("");
     const [password, setPassword] = useState<string>("");
     const [error, setError] = useState<boolean>(false);
+    const [showPassword, setShowPassword] = useState<boolean>(false);
     const [errorObj, setErrorObj] = useState<any>({});
 
     const navigate = useNavigate();
@@ -81,7 +83,7 @@ export default function Login() {
                         {errorObj?.email}
                     </span>
                 </div>
-                <div className="flex flex-col space-y-1">
+                <div className="flex flex-col space-y-1 ">
                     <div className="flex items-center justify-between">
                         <label
                             htmlFor="password"
@@ -90,19 +92,31 @@ export default function Login() {
                             Password
                         </label>
                     </div>
-                    <input
-                        type="password"
-                        id="password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        className={cn(
-                            "inputClass",
-                            (error && password === "") ||
-                                (errorObj &&
-                                    errorObj?.password &&
-                                    "inputErrorClass")
-                        )}
-                    />
+                    <div className="relative w-full">
+                        <input
+                            type={showPassword ? "text" : "password"}
+                            id="password"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            className={cn(
+                                "w-full",
+                                "inputClass",
+                                (error && password === "") ||
+                                    (errorObj &&
+                                        errorObj?.password &&
+                                        "inputErrorClass")
+                            )}
+                        />
+                        <div className="absolute right-3 top-[6px] cursor-pointer">
+                            {showPassword ? (
+                                <EyeOff
+                                    onClick={() => setShowPassword(false)}
+                                />
+                            ) : (
+                                <Eye onClick={() => setShowPassword(true)} />
+                            )}
+                        </div>
+                    </div>
                     {error && password === "" && (
                         <span className="text-red-500 text-[10px]">
                             Password is required
